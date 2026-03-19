@@ -72,9 +72,27 @@
         .review-correct { background-color: #d4edda; border-color: #c3e6cb; color: #155724; font-weight: bold; }
         .review-wrong { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; text-decoration: line-through; }
         .review-exp { margin-top: 15px; padding-top: 10px; border-top: 1px dashed #ccc; font-size: 15px; color: #444; }
+
+        /* ANTI-CHEAT FULLSCREEN BLOCKER */
+        #fullscreen-blocker {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #d32f2f; z-index: 99999; flex-direction: column;
+            justify-content: center; align-items: center; color: white; text-align: center;
+        }
+        #fullscreen-blocker h1 { font-size: 50px; margin-bottom: 10px; }
+        #fullscreen-blocker p { font-size: 20px; max-width: 600px; margin-bottom: 30px; line-height: 1.5;}
+        .btn-resume { background-color: white; color: #d32f2f; padding: 15px 40px; font-size: 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3);}
+        .btn-resume:hover { background-color: #f0f0f0; }
     </style>
 </head>
 <body>
+
+    <div id="fullscreen-blocker">
+        <h1>EXAM PAUSED</h1>
+        <p>You have exited Full-Screen mode. Leaving full-screen or switching tabs is strictly prohibited during an active examination.</p>
+        <p>Your timer is still running. Click the button below to return to the exam.</p>
+        <button class="btn-resume" onclick="resumeExam()">Return to Full-Screen Exam</button>
+    </div>
 
     <div class="header">
         <h1>Excellent Institute - CBT Portal</h1>
@@ -106,7 +124,7 @@
                 <label><input type="radio" name="timer-mode" value="untimed"> No Timer (Practice Mode)</label>
             </div>
             <p style="font-size: 12px; color: #d32f2f; margin-top: 10px; font-weight: bold;">
-                * Note: Exam Mode runs in Full-Screen. Navigating away from the tab will trigger a warning.
+                * Note: Exam Mode forces Full-Screen. Navigating away or pressing ESC will lock the exam.
             </p>
         </div>
         <br>
@@ -189,8 +207,7 @@
             </div>
             
             <h3 style="color: #2c6eb5; border-bottom: 2px solid #ccc; padding-bottom: 5px;">Detailed Review</h3>
-            <div id="review-container">
-                </div>
+            <div id="review-container"></div>
 
             <br>
             <button class="start-btn" onclick="location.reload()">Return to Setup Screen</button>
@@ -430,8 +447,54 @@
     let timerInterval;
     let timeRemaining = 1200; 
     let isTimed = true;
+    let examActive = false;
 
-    // --- LOGIC ---
+    // --- FULLSCREEN LOCKOUT LOGIC ---
+    document.addEventListener("fullscreenchange", checkFullscreen);
+    document.addEventListener("webkitfullscreenchange", checkFullscreen);
+    document.addEventListener("mozfullscreenchange", checkFullscreen);
+    document.addEventListener("MSFullscreenChange", checkFullscreen);
+
+    function checkFullscreen() {
+        if (examActive && isTimed) {
+            if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
+                // They exited fullscreen! Show the blocker.
+                document.getElementById('fullscreen-blocker').style.display = 'flex';
+            }
+        }
+    }
+
+    function resumeExam() {
+        requestFullScreen();
+        // Give browser time to enter fullscreen before hiding the warning
+        setTimeout(() => {
+            if (document.fullscreenElement || document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement) {
+                document.getElementById('fullscreen-blocker').style.display = 'none';
+            }
+        }, 500); 
+    }
+
+    function requestFullScreen() {
+        let elem = document.documentElement;
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen().catch(err => console.log(err));
+        } else if (elem.webkitRequestFullscreen) { 
+            elem.webkitRequestFullscreen().catch(err => console.log(err));
+        } else if (elem.msRequestFullscreen) {
+            elem.msRequestFullscreen().catch(err => console.log(err));
+        }
+    }
+
+    // Tab Switching Monitor
+    let warningCount = 0;
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden && examActive && isTimed) {
+            warningCount++;
+            alert("WARNING: You navigated away from the exam window! This action is strictly prohibited. (Warning " + warningCount + ")");
+        }
+    });
+
+    // --- EXAM LOGIC ---
     function updateSetDropdown() {
         const subject = document.getElementById('exam-subject').value;
         const setDropdown = document.getElementById('test-set');
@@ -460,26 +523,6 @@
         return shuffled;
     }
 
-    function requestFullScreen() {
-        let elem = document.documentElement;
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen().catch(err => console.log(err));
-        } else if (elem.webkitRequestFullscreen) { 
-            elem.webkitRequestFullscreen().catch(err => console.log(err));
-        } else if (elem.msRequestFullscreen) {
-            elem.msRequestFullscreen().catch(err => console.log(err));
-        }
-    }
-
-    // Anti-Cheat Window Listener
-    let warningCount = 0;
-    document.addEventListener("visibilitychange", () => {
-        if (document.hidden && document.getElementById('exam-interface').style.display === 'flex' && isTimed) {
-            warningCount++;
-            alert("WARNING: You navigated away from the exam window! This action is strictly prohibited. (Warning " + warningCount + ")");
-        }
-    });
-
     function startExam() {
         const nameInput = document.getElementById('student-name').value.trim();
         if (nameInput === "") { alert("Please enter Candidate Name."); return; }
@@ -500,13 +543,14 @@
         statuses[0] = 1; // First is Not Answered initially
         userAnswers = new Array(currentQuestions.length).fill(null);
         currentIndex = 0;
+        examActive = true;
 
         const timerMode = document.querySelector('input[name="timer-mode"]:checked').value;
         if (timerMode === 'timed') {
             isTimed = true;
             timeRemaining = 1200;
             startTimer();
-            // Force Fullscreen in Exam Mode to hide URL
+            // Force Fullscreen in Exam Mode
             requestFullScreen();
         } else {
             isTimed = false;
@@ -541,7 +585,6 @@
         document.getElementById('q-no').innerText = `Question No. ${index + 1}`;
         document.getElementById('q-text').innerText = q.q;
         
-        // Hide Answer Reveal Box and "Show Answer" Button on fresh load
         document.getElementById('answer-reveal').style.display = 'none'; 
         const checkAnsBtn = document.getElementById('btn-check-ans');
         
@@ -556,8 +599,8 @@
             }
         }
 
-        // Only show the "Check Answer" button if they already have an answer saved
-        if (userAnswers[index] !== null) {
+        // Only show "Check Answer" in Practice Mode if they have an answer
+        if (userAnswers[index] !== null && !isTimed) {
             checkAnsBtn.style.display = 'inline-block';
         } else {
             checkAnsBtn.style.display = 'none';
@@ -567,10 +610,13 @@
         updatePaletteLegend();
     }
 
-    // Attach Event Listener to Radio Buttons to show "Check Answer" immediately upon click
+    // Attach Event Listener to Radio Buttons
     document.querySelectorAll('input[name="opt"]').forEach(radio => {
         radio.addEventListener('change', () => {
-            document.getElementById('btn-check-ans').style.display = 'inline-block';
+            // Only allow instant checking in untimed practice mode
+            if(!isTimed) {
+                document.getElementById('btn-check-ans').style.display = 'inline-block';
+            }
         });
     });
 
@@ -694,9 +740,13 @@
     }
 
     function processSubmission() {
+        examActive = false; // Disable anti-cheat triggers
+
         // Exit fullscreen if active
-        if (document.fullscreenElement) {
-            document.exitFullscreen().catch(err => console.log(err));
+        if (document.fullscreenElement || document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement) {
+            if (document.exitFullscreen) document.exitFullscreen().catch(err => console.log(err));
+            else if (document.webkitExitFullscreen) document.webkitExitFullscreen().catch(err => console.log(err));
+            else if (document.msExitFullscreen) document.msExitFullscreen().catch(err => console.log(err));
         }
 
         document.getElementById('exam-interface').style.display = 'none';
@@ -723,13 +773,10 @@
             let userAnsText = userAnswers[i] !== null ? q.options[userAnswers[i]] : "Not Attempted";
             let correctAnsText = q.options[q.ans];
             
-            let isCorrect = false;
-
             if (userAnswers[i] !== null && statuses[i] !== 3) {
                 attempted++;
                 if (userAnswers[i] === q.ans) {
                     correct++;
-                    isCorrect = true;
                     reportText += `Q${i+1}: CORRECT\n`;
                 } else {
                     reportText += `Q${i+1}: INCORRECT (Picked: ${userAnsText} | Correct: ${correctAnsText})\n`;
@@ -745,10 +792,10 @@
             for(let j=0; j<4; j++) {
                 let optClass = "review-opt";
                 if(userAnswers[i] === j && userAnswers[i] !== q.ans) {
-                    optClass += " review-wrong"; // They picked this and it's wrong
+                    optClass += " review-wrong"; // Picked and wrong
                 }
                 if(j === q.ans) {
-                    optClass += " review-correct"; // This is the right answer
+                    optClass += " review-correct"; // Right answer
                 }
                 reviewHTML += `<div class="${optClass}">${String.fromCharCode(65+j)}. ${q.options[j]}</div>`;
             }
@@ -769,7 +816,7 @@
         document.getElementById('res-incorrect').innerText = wrong;
         document.getElementById('res-score').innerText = score.toFixed(2);
 
-        // Inject the Detailed Review HTML
+        // Inject Detailed Review (Only if it was an Exam, or if you want it always. Let's show it always.)
         document.getElementById('review-container').innerHTML = reviewHTML;
 
         // Finish text report
@@ -779,7 +826,6 @@
         reportText += `Incorrect: ${wrong}\n`;
         reportText += `Final Score: ${score.toFixed(2)}\n`;
 
-        // Automatically download the file
         downloadFile(reportText, studentName);
     }
 
