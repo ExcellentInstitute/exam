@@ -3,48 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excellent Institute - CBT Practice Portal</title>
+    <title>Excellent Institute - RRB Mock Test Portal</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f0f0f0; user-select: none; }
-        .header { background-color: #2c6eb5; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #e7a03c; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            user-select: none;
+        }
+
+        /* Top Header */
+        .header {
+            background-color: #2c6eb5;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid #e7a03c;
+        }
         .header h1 { margin: 0; font-size: 20px; }
-        #pre-exam { max-width: 800px; margin: 40px auto; background: white; padding: 30px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 5px; }
+        
+        /* Pre-Exam Screen */
+        #pre-exam {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
         #pre-exam h2 { color: #2c6eb5; border-bottom: 2px solid #ccc; padding-bottom: 10px; }
-        .input-group { margin: 20px 0; }
-        .input-group label { font-weight: bold; display: block; margin-bottom: 8px; }
-        .input-group input[type="text"], .input-group select { padding: 10px; font-size: 16px; width: 100%; max-width: 300px; border: 1px solid #ccc; border-radius: 4px; }
-        .start-btn { background-color: #4CAF50; color: white; padding: 12px 24px; border: none; cursor: pointer; font-size: 16px; border-radius: 3px; margin-top: 15px; }
+        .set-selector { margin: 20px 0; }
+        .set-selector select { padding: 10px; font-size: 16px; width: 200px; }
+        .start-btn {
+            background-color: #4CAF50; color: white; padding: 12px 24px;
+            border: none; cursor: pointer; font-size: 16px; border-radius: 3px;
+        }
         .start-btn:hover { background-color: #45a049; }
-        #exam-interface { display: none; height: calc(100vh - 54px); flex-direction: row; }
-        .left-panel { flex: 1; display: flex; flex-direction: column; background: white; border-right: 2px solid #ccc; }
-        .exam-info-bar { background: #e6f0fa; padding: 10px 20px; font-weight: bold; display: flex; justify-content: space-between; border-bottom: 1px solid #ccc; }
+
+        /* Exam Interface Layout */
+        #exam-interface {
+            display: none;
+            height: calc(100vh - 54px);
+            display: flex;
+            flex-direction: row;
+        }
+        
+        /* Left Panel - Questions */
+        .left-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-right: 2px solid #ccc;
+        }
+        .exam-info-bar {
+            background: #e6f0fa; padding: 10px 20px; font-weight: bold;
+            display: flex; justify-content: space-between; border-bottom: 1px solid #ccc;
+        }
         .timer { color: #d32f2f; font-size: 18px; }
         .question-area { padding: 20px; flex: 1; overflow-y: auto; }
         .question-header { font-size: 18px; font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;}
         .options-list { list-style: none; padding: 0; }
-        .options-list li { margin-bottom: 15px; font-size: 16px; display: flex; align-items: center; padding: 10px; border-radius: 5px; border: 1px solid transparent; }
+        .options-list li { margin-bottom: 15px; font-size: 16px; display: flex; align-items: center; }
         .options-list input[type="radio"] { margin-right: 10px; width: 18px; height: 18px; cursor: pointer;}
-        .correct-answer { background-color: #d4edda; border-color: #c3e6cb; color: #155724; font-weight: bold; }
-        .wrong-answer { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; }
-        #answer-feedback { margin-top: 20px; font-weight: bold; font-size: 16px; height: 24px; }
-        .action-bar { padding: 15px 20px; background: #f9f9f9; border-top: 1px solid #ccc; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* Action Buttons */
+        .action-bar {
+            padding: 15px 20px; background: #f9f9f9; border-top: 1px solid #ccc;
+            display: flex; justify-content: space-between; align-items: center;
+        }
         .btn { padding: 8px 15px; border: 1px solid #ccc; cursor: pointer; border-radius: 3px; font-weight: bold; }
+        .btn-mark { background-color: #fff; color: #333; }
         .btn-clear { background-color: #fff; color: #333; }
-        .btn-save { background-color: #4CAF50; color: white; border-color: #4CAF50; min-width: 140px;}
+        .btn-save { background-color: #4CAF50; color: white; border-color: #4CAF50; }
         .btn-submit { background-color: #2196F3; color: white; border-color: #2196F3; margin-left: 10px;}
-        .right-panel { width: 300px; background: #f4f7f6; display: flex; flex-direction: column; }
-        .candidate-info { padding: 20px 15px; text-align: center; border-bottom: 1px solid #ccc; background: white;}
-        .candidate-info h3 { margin: 0; color: #2c6eb5; font-size: 18px; word-wrap: break-word;}
+
+        /* Right Panel - Palette */
+        .right-panel {
+            width: 300px;
+            background: #f4f7f6;
+            display: flex;
+            flex-direction: column;
+        }
+        .candidate-info { padding: 15px; text-align: center; border-bottom: 1px solid #ccc; background: white;}
+        .candidate-info img { width: 80px; height: 80px; background: #ddd; border-radius: 50%; margin-bottom: 10px; }
         .palette-legend { padding: 10px; font-size: 12px; display: flex; flex-wrap: wrap; border-bottom: 1px solid #ccc; background: white;}
         .legend-item { width: 50%; display: flex; align-items: center; margin-bottom: 8px; }
         .status-box { width: 25px; height: 25px; margin-right: 8px; display: inline-flex; justify-content: center; align-items: center; color: white; font-size: 12px; font-weight: bold;}
+        
+        /* Palette Grid */
         .palette-container { padding: 15px; overflow-y: auto; flex: 1; }
         .palette-title { font-weight: bold; margin-bottom: 10px; }
         .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .grid-item { width: 45px; height: 40px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-weight: bold; border-radius: 5px; border: 1px solid #aaa; background: #fff; color: #333; }
+        .grid-item {
+            width: 45px; height: 40px; cursor: pointer;
+            display: flex; justify-content: center; align-items: center;
+            font-weight: bold; border-radius: 5px;
+            border: 1px solid #aaa; background: #fff; color: #333;
+        }
+
+        /* Status Colors (RRB standard) */
         .not-visited { background: #fff; border: 1px solid #aaa; color: #333; }
         .not-answered { background: #d32f2f; color: white; border: none; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; }
         .answered { background: #388e3c; color: white; border: none; border-top-left-radius: 15px; border-top-right-radius: 15px; }
+        .marked { background: #7b1fa2; color: white; border: none; border-radius: 50%; }
+        .marked-answered { background: #7b1fa2; color: white; border: none; border-radius: 50%; position: relative;}
+        .marked-answered::after { content: '✔'; position: absolute; bottom: -5px; right: -5px; background: #388e3c; font-size: 10px; border-radius: 50%; width: 14px; height: 14px; display: flex; justify-content: center; align-items: center;}
+
+        /* Result Screen */
         #result-screen { display: none; text-align: center; margin-top: 50px; }
         .score-card { background: white; display: inline-block; padding: 40px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.2); }
         .score-card h2 { color: #2c6eb5; font-size: 30px; margin-top: 0;}
@@ -58,31 +127,25 @@
     </div>
 
     <div id="pre-exam">
-        <h2>Candidate Details & Instructions</h2>
-        <div class="input-group">
-            <label for="student-name">Full Name:</label>
-            <input type="text" id="student-name" placeholder="Enter your full name here" required>
-        </div>
+        <h2>Instructions for Candidate</h2>
+        <p>1. The clock will be set at the server. The countdown timer at the top right corner of screen will display the remaining time available for you to complete the examination.</p>
+        <p>2. The Question Palette displayed on the right side of screen will show the status of each question.</p>
+        <p>3. You can change your answer any time before clicking submit or before time runs out.</p>
         
-        <div class="input-group">
-            <label for="test-set">Select Test Set:</label>
+        <div class="set-selector">
+            <label for="test-set"><strong>Select Test Set:</strong></label><br><br>
             <select id="test-set">
-                <option value="set1">Set 1 - Beginner (20 Questions)</option>
-                <option value="set2">Set 2 - Easy (20 Questions)</option>
-                <option value="set3">Set 3 - Moderate (20 Questions)</option>
-                <option value="set4">Set 4 - Intermediate (20 Questions)</option>
-                <option value="set5">Set 5 - Advanced Basics (20 Questions)</option>
+                <option value="set1">Set 1 (20 Questions)</option>
+                <option value="set2">Set 2 (20 Questions)</option>
+                <option value="set3">Set 3 (20 Questions)</option>
+                <option value="set4">Set 4 (20 Questions)</option>
+                <option value="set5">Set 5 (20 Questions)</option>
             </select>
         </div>
-
-        <p>1. The countdown timer at the top right corner will display the remaining time.</p>
-        <p>2. <strong>Practice Mode:</strong> Select your answer and click <strong>"Save Answer"</strong> to reveal the correct solution. Then click <strong>"Proceed to Next"</strong>.</p>
-        <p>3. Your result file will be generated automatically upon submission.</p>
-        
         <button class="start-btn" onclick="startExam()">I am ready to begin</button>
     </div>
 
-    <div id="exam-interface">
+    <div id="exam-interface" style="display: none;">
         <div class="left-panel">
             <div class="exam-info-bar">
                 <span>Subject: Basic Computer Knowledge</span>
@@ -94,20 +157,20 @@
                 <div style="font-size: 18px; margin-bottom: 20px;" id="q-text">Loading question...</div>
                 
                 <ul class="options-list">
-                    <li id="li0"><input type="radio" name="opt" id="opt0" value="0"><label for="opt0" id="lbl0">Option A</label></li>
-                    <li id="li1"><input type="radio" name="opt" id="opt1" value="1"><label for="opt1" id="lbl1">Option B</label></li>
-                    <li id="li2"><input type="radio" name="opt" id="opt2" value="2"><label for="opt2" id="lbl2">Option C</label></li>
-                    <li id="li3"><input type="radio" name="opt" id="opt3" value="3"><label for="opt3" id="lbl3">Option D</label></li>
+                    <li><input type="radio" name="opt" id="opt0" value="0"><label for="opt0" id="lbl0">Option A</label></li>
+                    <li><input type="radio" name="opt" id="opt1" value="1"><label for="opt1" id="lbl1">Option B</label></li>
+                    <li><input type="radio" name="opt" id="opt2" value="2"><label for="opt2" id="lbl2">Option C</label></li>
+                    <li><input type="radio" name="opt" id="opt3" value="3"><label for="opt3" id="lbl3">Option D</label></li>
                 </ul>
-                <div id="answer-feedback"></div>
             </div>
 
             <div class="action-bar">
                 <div>
-                    <button class="btn btn-clear" id="btn-clear" onclick="clearResponse()">Clear Response</button>
+                    <button class="btn btn-mark" onclick="markForReview()">Mark for Review & Next</button>
+                    <button class="btn btn-clear" onclick="clearResponse()">Clear Response</button>
                 </div>
                 <div>
-                    <button class="btn btn-save" id="btn-save" onclick="handleSaveAndNext()">Save Answer</button>
+                    <button class="btn btn-save" onclick="saveAndNext()">Save & Next</button>
                     <button class="btn btn-submit" onclick="submitExam()">Submit Exam</button>
                 </div>
             </div>
@@ -115,19 +178,23 @@
 
         <div class="right-panel">
             <div class="candidate-info">
-                <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Current Candidate:</div>
-                <h3 id="display-name">Student Name</h3>
+                <img src="https://via.placeholder.com/80" alt="Candidate">
+                <div style="font-weight: bold;">Candidate Name</div>
+                <div style="font-size: 12px; color: #666;">Mock Test Candidate</div>
             </div>
             
             <div class="palette-legend">
                 <div class="legend-item"><div class="status-box answered">0</div> Answered</div>
                 <div class="legend-item"><div class="status-box not-answered">0</div> Not Answered</div>
                 <div class="legend-item"><div class="status-box not-visited">0</div> Not Visited</div>
+                <div class="legend-item"><div class="status-box marked">0</div> Marked for Review</div>
+                <div class="legend-item" style="width: 100%;"><div class="status-box marked-answered">0</div> Answered & Marked for Review</div>
             </div>
 
             <div class="palette-container">
                 <div class="palette-title">Question Palette:</div>
-                <div class="grid" id="palette-grid"></div>
+                <div class="grid" id="palette-grid">
+                    </div>
             </div>
         </div>
     </div>
@@ -135,174 +202,81 @@
     <div id="result-screen">
         <div class="score-card">
             <h2>Exam Successfully Submitted</h2>
-            <p>Your result file has been generated and downloaded.</p>
             <div class="stat-row"><span>Total Questions:</span> <strong id="res-total">20</strong></div>
             <div class="stat-row"><span>Attempted:</span> <strong id="res-attempted">0</strong></div>
             <div class="stat-row"><span>Correct Answers:</span> <strong id="res-correct" style="color: green;">0</strong></div>
+            <div class="stat-row"><span>Incorrect Answers:</span> <strong id="res-incorrect" style="color: red;">0</strong></div>
             <hr>
             <div class="stat-row" style="font-size: 24px;"><span>Total Score:</span> <strong id="res-score">0</strong></div>
             <br>
-            <button class="start-btn" onclick="location.reload()">Return to Home</button>
+            <button class="start-btn" onclick="location.reload()">Back to Home</button>
         </div>
     </div>
 
 <script>
-    // --- QUESTION DATA (100 Questions Total) ---
+    // --- QUESTION DATA ---
     const allSets = {
-        // SET 1: Very Easy - Fundamental Concepts & Hardware
         set1: [
             { q: "Who is known as the father of the computer?", options: ["Alan Turing", "Charles Babbage", "Bill Gates", "Steve Jobs"], ans: 1 },
             { q: "What does CPU stand for?", options: ["Central Process Unit", "Computer Personal Unit", "Central Processing Unit", "Central Processor Unit"], ans: 2 },
             { q: "Which of the following is an input device?", options: ["Monitor", "Printer", "Keyboard", "Speaker"], ans: 2 },
-            { q: "Which type of memory is volatile (loses data when powered off)?", options: ["ROM", "Hard Drive", "Flash Drive", "RAM"], ans: 3 },
-            { q: "The physical parts of a computer are called?", options: ["Software", "Hardware", "Firmware", "Malware"], ans: 1 },
-            { q: "What is considered the 'Brain' of the computer?", options: ["RAM", "Motherboard", "CPU", "Hard Disk"], ans: 2 },
-            { q: "Which of the following is an output device?", options: ["Microphone", "Mouse", "Scanner", "Monitor"], ans: 3 },
-            { q: "What does OS stand for?", options: ["Operating System", "Open Software", "Optical Sensor", "Output System"], ans: 0 },
-            { q: "A computer mouse is primarily what kind of device?", options: ["Storage", "Output", "Input", "Processing"], ans: 2 },
-            { q: "1 Byte is equal to how many bits?", options: ["4 bits", "8 bits", "16 bits", "32 bits"], ans: 1 },
-            { q: "Which of the following is NOT a brand of computer?", options: ["Dell", "HP", "Toyota", "Lenovo"], ans: 2 },
-            { q: "The keys on the top of the keyboard labeled F1 to F12 are called:", options: ["Number keys", "Special keys", "Function keys", "Navigation keys"], ans: 2 },
-            { q: "What is the smallest unit of data in a computer?", options: ["Byte", "Bit", "Nibble", "Pixel"], ans: 1 },
-            { q: "Restarting a computer that is already turned on is called?", options: ["Cold booting", "Warm booting", "Shutting down", "Logging off"], ans: 1 },
-            { q: "What is the standard layout name for a common English keyboard?", options: ["AZERTY", "QWERTY", "DVORAK", "ABCDE"], ans: 1 },
-            { q: "Microsoft Word is an example of what type of software?", options: ["System Software", "Application Software", "Utility Software", "Malware"], ans: 1 },
-            { q: "What action is used to move text from one document to another?", options: ["Copy and Paste", "Cut and Paste", "Delete and Type", "Drag and Drop"], ans: 1 },
-            { q: "The main background screen of a Windows computer is called the:", options: ["Desktop", "Taskbar", "Menu", "Window"], ans: 0 },
-            { q: "Pressing the left mouse button twice quickly is called:", options: ["Clicking", "Double-clicking", "Right-clicking", "Dragging"], ans: 1 },
-            { q: "Which device is used to enter sound into the computer?", options: ["Speaker", "Microphone", "Webcam", "Monitor"], ans: 1 }
-        ],
-        // SET 2: Easy - Operating Systems, UI, & Shortcuts
-        set2: [
+            { q: "1 Gigabyte (GB) is equal to:", options: ["1024 Megabytes (MB)", "1000 Kilobytes (KB)", "1024 Terabytes (TB)", "1000 Bytes"], ans: 0 },
+            { q: "Which type of memory is volatile?", options: ["ROM", "Hard Drive", "Flash Drive", "RAM"], ans: 3 },
             { q: "What does GUI stand for?", options: ["General User Instruction", "Graphical User Interface", "Global Utility Interface", "Graph User Internet"], ans: 1 },
-            { q: "What is the primary function of an Operating System?", options: ["Word processing", "Managing hardware and software resources", "Browsing the internet", "Virus protection"], ans: 1 },
-            { q: "What is the keyboard shortcut to Copy selected text?", options: ["Ctrl + C", "Ctrl + V", "Ctrl + X", "Ctrl + Z"], ans: 0 },
-            { q: "What is the keyboard shortcut to Paste copied text?", options: ["Ctrl + P", "Ctrl + S", "Ctrl + V", "Ctrl + Z"], ans: 2 },
-            { q: "What is the keyboard shortcut to Undo an action?", options: ["Ctrl + U", "Ctrl + Y", "Ctrl + X", "Ctrl + Z"], ans: 3 },
-            { q: "What is the main circuit board in a computer called?", options: ["CPU", "Motherboard", "RAM", "Hard Drive"], ans: 1 },
-            { q: "What is the standard file extension for a modern Microsoft Word document?", options: [" .pdf", " .txt", " .docx", " .xls"], ans: 2 },
-            { q: "What is the standard file extension for a Microsoft Excel spreadsheet?", options: [" .pptx", " .xlsx", " .docx", " .mp3"], ans: 1 },
-            { q: "Which of the following is a common image file extension?", options: [" .exe", " .jpg", " .mp4", " .txt"], ans: 1 },
-            { q: "When you delete a file in Windows, where does it go by default?", options: ["Control Panel", "My Documents", "Recycle Bin", "Task Manager"], ans: 2 },
-            { q: "A program used to view web pages is called a:", options: ["Spreadsheet", "Word Processor", "Web Browser", "Database"], ans: 2 },
-            { q: "Which of the following is NOT an Operating System?", options: ["Windows", "Linux", "macOS", "Microsoft Office"], ans: 3 },
-            { q: "What is the shortcut to close the currently active window or app?", options: ["Alt + F4", "Ctrl + W", "Shift + Delete", "Ctrl + Esc"], ans: 0 },
-            { q: "The bar at the bottom of the Windows desktop is called the:", options: ["Title bar", "Menu bar", "Taskbar", "Scroll bar"], ans: 2 },
-            { q: "The blinking vertical line where text will appear when you type is the:", options: ["Pointer", "Cursor", "Marker", "Icon"], ans: 1 },
-            { q: "What is the keyboard shortcut to Save a document?", options: ["Ctrl + S", "Alt + S", "Shift + S", "Ctrl + D"], ans: 0 },
-            { q: "Which key is used to open the Start menu in Windows?", options: ["Esc Key", "Alt Key", "Windows Key", "Tab Key"], ans: 2 },
-            { q: "Software that is available completely free of charge is called:", options: ["Shareware", "Freeware", "Malware", "Adware"], ans: 1 },
-            { q: "What is the keyboard shortcut to Select All text?", options: ["Ctrl + L", "Ctrl + S", "Ctrl + A", "Ctrl + X"], ans: 2 },
-            { q: "What is the keyboard shortcut to Print a document?", options: ["Ctrl + PrtSc", "Ctrl + P", "Alt + P", "Shift + P"], ans: 1 }
-        ],
-        // SET 3: Moderate - Internet, Email, & Networks
-        set3: [
-            { q: "What does WWW stand for?", options: ["World Wide Web", "World Web Wide", "Wide World Web", "Web World Wide"], ans: 0 },
+            { q: "Which operating system is developed by Microsoft?", options: ["macOS", "Linux", "Windows", "Android"], ans: 2 },
+            { q: "What is the shortcut key to copy selected text?", options: ["Ctrl + C", "Ctrl + V", "Ctrl + X", "Ctrl + Z"], ans: 0 },
             { q: "What does URL stand for?", options: ["Uniform Resource Locator", "Universal Router Link", "Uniform Resource Link", "Universal Resource Locator"], ans: 0 },
             { q: "HTTP stands for:", options: ["Hypertext Transfer Protocol", "Hyper Transfer Text Protocol", "Hypertext Transmission Process", "Hyperlink Transfer Protocol"], ans: 0 },
-            { q: "What does IP stand for in 'IP Address'?", options: ["Internet Provider", "Internal Protocol", "Internet Protocol", "Intranet Process"], ans: 2 },
-            { q: "What does Wi-Fi commonly stand for?", options: ["Wireless Fidelity", "Wireless Fiber", "Wired Fidelity", "Wireless Finder"], ans: 0 },
+            { q: "Which of these is NOT a web browser?", options: ["Google Chrome", "Mozilla Firefox", "Microsoft Edge", "Microsoft Word"], ans: 3 },
             { q: "LAN stands for:", options: ["Large Area Network", "Local Area Network", "Logical Area Network", "Local Array Network"], ans: 1 },
-            { q: "WAN stands for:", options: ["World Area Network", "Wide Area Network", "Wireless Area Network", "Web Area Network"], ans: 1 },
-            { q: "What does 'Email' stand for?", options: ["Electric Mail", "Electronic Mail", "Easy Mail", "Extra Mail"], ans: 1 },
-            { q: "Unsolicited commercial or junk email is commonly known as:", options: ["Spam", "Drafts", "Trash", "Malware"], ans: 0 },
-            { q: "Which of these is a Web Browser?", options: ["Google", "Yahoo", "Google Chrome", "Bing"], ans: 2 },
-            { q: "Which of these is a Search Engine?", options: ["Mozilla Firefox", "Google", "Microsoft Edge", "Safari"], ans: 1 },
-            { q: "ISP stands for:", options: ["Internet Service Provider", "Internal System Process", "Internet Standard Protocol", "Intranet Service Provider"], ans: 0 },
-            { q: "The process of transferring files from the Internet to your computer is called:", options: ["Uploading", "Downloading", "Streaming", "Buffering"], ans: 1 },
-            { q: "The process of transferring files from your computer to the Internet is called:", options: ["Uploading", "Downloading", "Broadcasting", "Posting"], ans: 0 },
-            { q: "The main or first page of a website is called the:", options: ["Start page", "Home page", "Main page", "Index page"], ans: 1 },
-            { q: "Every computer connected to the internet must have a unique:", options: ["MAC Address", "IP Address", "Email Address", "Web Address"], ans: 1 },
-            { q: "A company that provides access to the internet is called an:", options: ["ISP", "URL", "HTML", "HTTP"], ans: 0 },
-            { q: "A device that forwards data packets between computer networks is a:", options: ["Modem", "Switch", "Router", "Hub"], ans: 2 },
-            { q: "A secret word or phrase used to gain access to a computer system or account is a:", options: ["Username", "Login", "Password", "Captcha"], ans: 2 },
-            { q: "HTML is used to create web pages. What does it stand for?", options: ["Hyper Text Markup Language", "High Text Machine Language", "Hyperlink Text Markup Language", "Home Tool Markup Language"], ans: 0 }
+            { q: "Which function key is typically used to open 'Help' in Windows?", options: ["F1", "F2", "F5", "F12"], ans: 0 },
+            { q: "What is the standard file extension for a Microsoft Word document?", options: [" .pdf", " .txt", " .docx", " .xls"], ans: 2 },
+            { q: "Unsolicited commercial email is commonly known as:", options: ["Spam", "Junk", "Virus", "Malware"], ans: 0 },
+            { q: "The ALU and Control Unit are part of the:", options: ["RAM", "ROM", "CPU", "Motherboard"], ans: 2 },
+            { q: "Which language is used to create basic web pages?", options: ["C++", "Python", "HTML", "Java"], ans: 2 },
+            { q: "The first mechanical calculating device was:", options: ["Abacus", "Pascaline", "ENIAC", "UNIVAC"], ans: 0 },
+            { q: "What is the standard storage capacity of a CD-ROM?", options: ["1.44 MB", "700 MB", "4.7 GB", "1 TB"], ans: 1 },
+            { q: "IP in 'IP Address' stands for:", options: ["Internet Provider", "Internal Protocol", "Internet Protocol", "Intranet Process"], ans: 2 }
         ],
-        // SET 4: Intermediate - Storage, Memory & Advanced Hardware
-        set4: [
-            { q: "1 Kilobyte (KB) is exactly equal to:", options: ["1000 Bytes", "1024 Bytes", "1048 Bytes", "2048 Bytes"], ans: 1 },
-            { q: "1 Megabyte (MB) is equal to:", options: ["1024 Bytes", "1000 KB", "1024 KB", "1024 GB"], ans: 2 },
-            { q: "1 Gigabyte (GB) is equal to:", options: ["1024 MB", "1000 MB", "1024 TB", "1000 KB"], ans: 0 },
-            { q: "Which of the following represents the largest amount of storage?", options: ["Kilobyte", "Megabyte", "Gigabyte", "Terabyte"], ans: 3 },
-            { q: "Which of the following is a non-volatile memory?", options: ["SRAM", "DRAM", "ROM", "Cache"], ans: 2 },
-            { q: "Which of the following is used to read an optical disk (like a CD/DVD)?", options: ["Magnetic head", "Laser beam", "Stylus", "LED"], ans: 1 },
+        set2: [
+            { q: "What is the primary function of an Operating System?", options: ["Word processing", "Managing hardware and software resources", "Browsing the internet", "Virus protection"], ans: 1 },
+            { q: "Which of the following is non-volatile memory?", options: ["SRAM", "DRAM", "ROM", "Cache"], ans: 2 },
+            // Add 18 more questions here following the same format
+        ],
+        set3: [
             { q: "What does USB stand for?", options: ["Universal Serial Bus", "Universal System Bus", "Unified Serial Bus", "Universal Storage Bus"], ans: 0 },
-            { q: "A hard drive is considered what type of storage?", options: ["Primary Storage", "Secondary Storage", "Tertiary Storage", "Temporary Storage"], ans: 1 },
-            { q: "What is the standard storage capacity of a normal CD-ROM?", options: ["1.44 MB", "700 MB", "4.7 GB", "1 TB"], ans: 1 },
-            { q: "What does SSD stand for?", options: ["Solid State Drive", "Super Speed Drive", "Solid Storage Disk", "Serial State Drive"], ans: 0 },
-            { q: "The ALU is a part of the CPU. What does it stand for?", options: ["Arithmetic Logic Unit", "Array Logic Unit", "Application Logic Unit", "Arithmetic Local Unit"], ans: 0 },
-            { q: "The speed of a CPU is typically measured in:", options: ["Bytes", "Pixels", "Hertz (GHz)", "Watts"], ans: 2 },
-            { q: "Which memory is directly accessible by the CPU?", options: ["Hard Drive", "RAM", "CD-ROM", "Flash Drive"], ans: 1 },
-            { q: "Which device is used to convert a physical paper document into a digital file?", options: ["Printer", "Scanner", "Plotter", "Projector"], ans: 1 },
-            { q: "Which device is used to produce a physical paper copy of a digital document?", options: ["Scanner", "Monitor", "Printer", "Keyboard"], ans: 2 },
-            { q: "What does VGA stand for (often related to monitors)?", options: ["Video Graphics Array", "Visual Graphics Adapter", "Volatile Graphics Array", "Video Game Adapter"], ans: 0 },
-            { q: "Which port is commonly used to transmit both high-quality video and audio?", options: ["VGA", "USB", "HDMI", "Ethernet"], ans: 2 },
-            { q: "A pen drive/flash drive connects to a computer via which port?", options: ["HDMI", "VGA", "Audio Jack", "USB"], ans: 3 },
-            { q: "What is the temporary storage area where copied items are kept before pasting?", options: ["Recycle Bin", "Clipboard", "Hard Drive", "ROM"], ans: 1 },
-            { q: "Which type of memory is the fastest in a computer system?", options: ["RAM", "Hard Disk", "Cache Memory", "Optical Drive"], ans: 2 }
+            { q: "Which of these is a valid email address format?", options: ["user.domain.com", "user@domain.com", "user@domain@com", "www.user.com"], ans: 1 },
+            // Add 18 more questions here following the same format
         ],
-        // SET 5: Advanced Basics - Security, History & Misc.
+        set4: [
+            { q: "What is the brain of a computer system?", options: ["ALU", "Memory", "CPU", "Control Unit"], ans: 2 },
+            { q: "What does 'Wi-Fi' stand for?", options: ["Wireless Fidelity", "Wireless Fiber", "Wired Fidelity", "Wireless Finder"], ans: 0 },
+             // Add 18 more questions here following the same format
+        ],
         set5: [
-            { q: "What was the name of the first mechanical computer designed by Charles Babbage?", options: ["ENIAC", "UNIVAC", "Analytical Engine", "Abacus"], ans: 2 },
-            { q: "ENIAC was the first general-purpose electronic computer. It stands for:", options: ["Electronic Numerical Integrator and Computer", "Electrical Network Integration and Calculation", "Electronic Network Interactive Computer", "Electrical Number Interpreter and Calculator"], ans: 0 },
-            { q: "First-generation computers used which technology?", options: ["Transistors", "Vacuum Tubes", "Integrated Circuits", "Microprocessors"], ans: 1 },
-            { q: "Second-generation computers were characterized by the use of:", options: ["Vacuum Tubes", "Microprocessors", "Transistors", "Artificial Intelligence"], ans: 2 },
-            { q: "Third-generation computers used:", options: ["Integrated Circuits (ICs)", "Transistors", "Vacuum Tubes", "Bio-chips"], ans: 0 },
-            { q: "Fourth-generation computers (the ones we use today) use:", options: ["Vacuum Tubes", "Transistors", "Microprocessors", "Quantum bits"], ans: 2 },
-            { q: "Malicious software designed to harm a computer is broadly called:", options: ["Freeware", "Malware", "Shareware", "Firmware"], ans: 1 },
-            { q: "A program designed to detect and remove malicious software is an:", options: ["Operating System", "Antivirus", "Firewall", "Compiler"], ans: 1 },
-            { q: "A security system that monitors and controls incoming and outgoing network traffic is a:", options: ["Router", "Switch", "Firewall", "Modem"], ans: 2 },
-            { q: "The process of converting readable data into unreadable characters to prevent unauthorized access is:", options: ["Decryption", "Compression", "Formatting", "Encryption"], ans: 3 },
-            { q: "An attempt to fraudulently obtain sensitive information (like passwords) by disguising as a trustworthy entity in an email is called:", options: ["Hacking", "Phishing", "Spamming", "Debugging"], ans: 1 },
-            { q: "An error or flaw in a computer program is commonly called a:", options: ["Virus", "Bug", "Spam", "Cookie"], ans: 1 },
-            { q: "The process of finding and fixing errors in computer code is called:", options: ["Compiling", "Executing", "Debugging", "Encrypting"], ans: 2 },
-            { q: "Who is generally credited as the inventor of the World Wide Web?", options: ["Bill Gates", "Steve Jobs", "Tim Berners-Lee", "Mark Zuckerberg"], ans: 2 },
-            { q: "Which file extension is commonly used for compressed files/folders?", options: [" .exe", " .pdf", " .zip", " .txt"], ans: 2 },
-            { q: "What does PDF stand for?", options: ["Portable Document Format", "Printed Document File", "Public Data Format", "Personal Document File"], ans: 0 },
-            { q: "SQL is a language primarily used to manage:", options: ["Web graphics", "Databases", "Operating Systems", "Hardware drivers"], ans: 1 },
-            { q: "The process of starting or restarting a computer is called:", options: ["Processing", "Booting", "Executing", "Compiling"], ans: 1 },
-            { q: "What does BIOS stand for?", options: ["Basic Input/Output System", "Binary Internal Operating System", "Base Instruction Output System", "Basic Internal Output Software"], ans: 0 },
-            { q: "Which function key is typically used to open the 'Help' menu in most Windows programs?", options: ["F2", "F5", "F1", "F12"], ans: 2 }
+            { q: "A kilobyte (KB) consists of exactly how many bytes?", options: ["1000", "1024", "1048", "2048"], ans: 1 },
+            { q: "Which of the following is used to read an optical disk?", options: ["Magnetic head", "Laser beam", "Stylus", "LED"], ans: 1 },
+             // Add 18 more questions here following the same format
         ]
     };
 
     // --- VARIABLES ---
-    let studentName = "";
     let currentQuestions = [];
     let currentIndex = 0;
-    let statuses = []; // 0=Not Visited, 1=Not Answered, 2=Answered
+    // Statuses: 0=Not Visited, 1=Not Answered, 2=Answered, 3=Marked, 4=Answered & Marked
+    let statuses = []; 
     let userAnswers = [];
     let timerInterval;
-    let timeRemaining = 1200;
-    let isAnswerRevealed = false; 
+    let timeRemaining = 1200; // 20 minutes in seconds
 
-    // --- SHUFFLE FUNCTION (Fisher-Yates) ---
-    function shuffleArray(array) {
-        let shuffled = [...array];
-        for (let i = shuffled.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-        }
-        return shuffled;
-    }
-
-    // --- INITIALIZATION ---
+    // --- FUNCTIONS ---
     function startExam() {
-        const nameInput = document.getElementById('student-name').value.trim();
-        if (nameInput === "") {
-            alert("Please enter your full name before starting the exam.");
-            return;
-        }
-        studentName = nameInput;
-        document.getElementById('display-name').innerText = studentName;
-
         const selectedSet = document.getElementById('test-set').value;
+        currentQuestions = allSets[selectedSet];
         
-        // Randomize the 20 questions for this session
-        currentQuestions = shuffleArray(allSets[selectedSet]);
-        
+        // Initialize arrays
         statuses = new Array(currentQuestions.length).fill(0);
-        statuses[0] = 1; 
+        statuses[0] = 1; // First question becomes "Not Answered" immediately
         userAnswers = new Array(currentQuestions.length).fill(null);
         currentIndex = 0;
 
@@ -331,43 +305,22 @@
     function loadQuestion(index) {
         currentIndex = index;
         const q = currentQuestions[index];
-        isAnswerRevealed = false;
         
         document.getElementById('q-no').innerText = `Question No. ${index + 1}`;
         document.getElementById('q-text').innerText = q.q;
-        document.getElementById('answer-feedback').innerHTML = ''; 
         
-        const saveBtn = document.getElementById('btn-save');
-        saveBtn.innerText = "Save Answer";
-        document.getElementById('btn-clear').style.display = "inline-block";
-
-        document.querySelectorAll('input[name="opt"]').forEach(el => {
-            el.checked = false;
-            el.disabled = false;
-        });
-
+        // Clear radios
+        document.querySelectorAll('input[name="opt"]').forEach(el => el.checked = false);
+        
+        // Load options
         for(let i=0; i<4; i++) {
             document.getElementById(`lbl${i}`).innerText = q.options[i];
-            document.getElementById(`li${i}`).className = ''; 
-            
-            // Re-apply if already answered
-            if (userAnswers[index] !== null) {
-                if (userAnswers[index] === i) {
-                    document.getElementById(`opt${i}`).checked = true;
-                }
-                document.querySelectorAll('input[name="opt"]').forEach(el => el.disabled = true);
-                
-                if (i === q.ans) document.getElementById(`li${i}`).className = 'correct-answer';
-                if (userAnswers[index] !== q.ans && userAnswers[index] === i) {
-                    document.getElementById(`li${i}`).className = 'wrong-answer';
-                }
-                
-                isAnswerRevealed = true;
-                saveBtn.innerText = "Proceed to Next";
-                document.getElementById('btn-clear').style.display = "none";
+            if (userAnswers[index] === i) {
+                document.getElementById(`opt${i}`).checked = true;
             }
         }
 
+        // If it was Not Visited (0), it is now Not Answered (1)
         if (statuses[index] === 0) statuses[index] = 1;
         updatePaletteLegend();
     }
@@ -377,75 +330,72 @@
         return selected ? parseInt(selected.value) : null;
     }
 
-    // --- TWO-STEP SAVE LOGIC ---
-    function handleSaveAndNext() {
-        const btnSave = document.getElementById('btn-save');
-        
-        if (!isAnswerRevealed) {
-            const ans = getSelectedOption();
-            
-            if (ans === null) {
-                alert("Please select an answer first.");
-                return;
-            }
-
+    function saveAndNext() {
+        const ans = getSelectedOption();
+        if (ans !== null) {
             userAnswers[currentIndex] = ans;
             statuses[currentIndex] = 2; // Answered
-            
-            // Lock and highlight
-            document.querySelectorAll('input[name="opt"]').forEach(el => el.disabled = true);
-            const correctAns = currentQuestions[currentIndex].ans;
-            
-            document.getElementById(`li${correctAns}`).className = 'correct-answer';
-            if (ans !== correctAns) {
-                document.getElementById(`li${ans}`).className = 'wrong-answer';
-                document.getElementById('answer-feedback').innerHTML = '<span style="color: #d32f2f;">Incorrect! Check the highlighted correct answer.</span>';
-            } else {
-                document.getElementById('answer-feedback').innerHTML = '<span style="color: #28a745;">Correct!</span>';
-            }
-
-            isAnswerRevealed = true;
-            btnSave.innerText = "Proceed to Next";
-            document.getElementById('btn-clear').style.display = "none";
-            updatePaletteLegend();
-
         } else {
-            moveToNext();
+            userAnswers[currentIndex] = null;
+            statuses[currentIndex] = 1; // Not Answered
         }
+        
+        moveToNext();
+    }
+
+    function markForReview() {
+        const ans = getSelectedOption();
+        if (ans !== null) {
+            userAnswers[currentIndex] = ans;
+            statuses[currentIndex] = 4; // Answered & Marked
+        } else {
+            userAnswers[currentIndex] = null;
+            statuses[currentIndex] = 3; // Marked
+        }
+        
+        moveToNext();
     }
 
     function clearResponse() {
         document.querySelectorAll('input[name="opt"]').forEach(el => el.checked = false);
-        for(let i=0; i<4; i++) { document.getElementById(`li${i}`).className = ''; }
-        document.getElementById('answer-feedback').innerHTML = '';
         userAnswers[currentIndex] = null;
-        statuses[currentIndex] = 1; 
+        statuses[currentIndex] = 1; // Not Answered
         updatePaletteLegend();
     }
 
     function moveToNext() {
+        updatePaletteLegend();
         if (currentIndex < currentQuestions.length - 1) {
             loadQuestion(currentIndex + 1);
         }
     }
 
     function jumpToQuestion(index) {
+        // Save current state implicitly as 'Not Answered' if currently visiting and no radio selected
         if (statuses[currentIndex] === 0) statuses[currentIndex] = 1;
         loadQuestion(index);
     }
 
     function updatePaletteLegend() {
-        let counts = [0, 0, 0];
+        let counts = [0, 0, 0, 0, 0];
+        
         for (let i = 0; i < currentQuestions.length; i++) {
             const btn = document.getElementById('pal-' + i);
-            btn.className = 'grid-item'; 
+            btn.className = 'grid-item'; // Reset classes
+            
             if (statuses[i] === 0) { btn.classList.add('not-visited'); counts[0]++; }
             else if (statuses[i] === 1) { btn.classList.add('not-answered'); counts[1]++; }
             else if (statuses[i] === 2) { btn.classList.add('answered'); counts[2]++; }
+            else if (statuses[i] === 3) { btn.classList.add('marked'); counts[3]++; }
+            else if (statuses[i] === 4) { btn.classList.add('marked-answered'); counts[4]++; }
         }
+
+        // Update Legend Counters
         document.querySelector('.not-visited').innerText = counts[0];
         document.querySelector('.not-answered').innerText = counts[1];
         document.querySelector('.answered').innerText = counts[2];
+        document.querySelector('.marked').innerText = counts[3];
+        document.querySelector('.marked-answered').innerText = counts[4];
     }
 
     function startTimer() {
@@ -455,6 +405,7 @@
             let m = Math.floor(timeRemaining / 60);
             let s = timeRemaining % 60;
             timeDisplay.innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            
             if (timeRemaining <= 0) {
                 clearInterval(timerInterval);
                 submitExam();
@@ -467,68 +418,33 @@
             clearInterval(timerInterval);
             document.getElementById('exam-interface').style.display = 'none';
             document.getElementById('result-screen').style.display = 'block';
-            calculateResultAndDownload();
+            calculateResult();
         }
     }
 
-    function calculateResultAndDownload() {
+    function calculateResult() {
         let correct = 0;
         let attempted = 0;
-        let reportText = `EXCELLENT INSTITUTE - MOCK TEST RESULT\n`;
-        reportText += `--------------------------------------\n`;
-        reportText += `Candidate Name: ${studentName}\n`;
-        reportText += `Date: ${new Date().toLocaleDateString()}\n`;
-        reportText += `Time Submitted: ${new Date().toLocaleTimeString()}\n`;
-        reportText += `Test Set: ${document.getElementById('test-set').options[document.getElementById('test-set').selectedIndex].text}\n\n`;
-        reportText += `QUESTION BREAKDOWN:\n`;
         
         for (let i = 0; i < currentQuestions.length; i++) {
-            let q = currentQuestions[i];
-            let userAnsText = userAnswers[i] !== null ? q.options[userAnswers[i]] : "Not Attempted";
-            let correctAnsText = q.options[q.ans];
-            
             if (userAnswers[i] !== null) {
                 attempted++;
-                if (userAnswers[i] === q.ans) {
+                if (userAnswers[i] === currentQuestions[i].ans) {
                     correct++;
-                    reportText += `Q${i+1}: CORRECT\n`;
-                } else {
-                    reportText += `Q${i+1}: INCORRECT (Picked: ${userAnsText} | Correct: ${correctAnsText})\n`;
                 }
-            } else {
-                reportText += `Q${i+1}: NOT ATTEMPTED (Correct: ${correctAnsText})\n`;
             }
         }
         
         document.getElementById('res-total').innerText = currentQuestions.length;
         document.getElementById('res-attempted').innerText = attempted;
         document.getElementById('res-correct').innerText = correct;
+        document.getElementById('res-incorrect').innerText = attempted - correct;
         
-        let wrong = attempted - correct;
-        let score = correct - (wrong * 0.33);
+        // Assuming +1 for correct, and standard RRB negative marking (-0.33)
+        let score = correct - ((attempted - correct) * 0.33);
         document.getElementById('res-score').innerText = score.toFixed(2);
-
-        reportText += `\nSUMMARY:\n`;
-        reportText += `Total Questions: ${currentQuestions.length}\n`;
-        reportText += `Attempted: ${attempted}\n`;
-        reportText += `Correct: ${correct}\n`;
-        reportText += `Incorrect: ${wrong}\n`;
-        reportText += `Total Score: ${score.toFixed(2)}\n`;
-
-        downloadFile(reportText, studentName);
     }
 
-    function downloadFile(content, name) {
-        const dateStr = new Date().toISOString().split('T')[0]; 
-        const fileName = `${name.replace(/\s+/g, '_')}_${dateStr}_Result.txt`;
-        const blob = new Blob([content], { type: 'text/plain' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = fileName;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    }
 </script>
 </body>
 </html>
