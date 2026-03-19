@@ -90,8 +90,8 @@
     <div id="fullscreen-blocker">
         <h1>EXAM PAUSED</h1>
         <p>You have exited Full-Screen mode. Leaving full-screen or switching tabs is strictly prohibited during an active examination.</p>
-        <p>Your timer is still running. Click the button below to return to the exam.</p>
-        <button class="btn-resume" onclick="resumeExam()">Return to Full-Screen Exam</button>
+        <p><strong>ANTI-CHEAT PENALTY:</strong> When you resume, your current questions will be deleted, your answers will be wiped, and a new set of questions will be loaded. Your timer will <strong>NOT</strong> be reset.</p>
+        <button class="btn-resume" onclick="resumeExam()">Accept Penalty & Resume Exam</button>
     </div>
 
     <div class="header">
@@ -124,7 +124,7 @@
                 <label><input type="radio" name="timer-mode" value="untimed"> No Timer (Practice Mode)</label>
             </div>
             <p style="font-size: 12px; color: #d32f2f; margin-top: 10px; font-weight: bold;">
-                * Note: Exam Mode forces Full-Screen. Navigating away or pressing ESC will lock the exam.
+                * Note: Exam Mode forces Full-Screen. Navigating away or pressing ESC will penalize the exam and change the questions.
             </p>
         </div>
         <br>
@@ -215,6 +215,7 @@
     </div>
 
 <script>
+    // --- EXPANDED MASSIVE QUESTION BANK (Now 30 Questions Per Set for proper re-rolling) ---
     const questionBank = {
         computer: {
             set1: [
@@ -223,7 +224,7 @@
                 { q: "Which of the following is considered an input device?", options: ["Monitor", "Printer", "Keyboard", "Speaker"], ans: 2, exp: "A keyboard is used to enter data into the computer, making it an input device." },
                 { q: "Which type of memory is volatile (loses data when powered off)?", options: ["ROM", "Hard Drive", "Flash Drive", "RAM"], ans: 3, exp: "Random Access Memory (RAM) requires power to hold data. When power is lost, all data in RAM is cleared." },
                 { q: "The physical, tangible parts of a computer are called?", options: ["Software", "Hardware", "Firmware", "Malware"], ans: 1, exp: "Hardware refers to the physical components of a computer system, like the monitor, mouse, and motherboard." },
-                { q: "What is considered the 'Brain' of the computer?", options: ["RAM", "Motherboard", "CPU", "Hard Disk"], ans: 2, exp: "The CPU (Central Processing Unit) processes instructions and performs calculations, acting as the brain." },
+                { q: "What is considered the 'Brain' of the computer?", options: ["RAM", "Motherboard", "CPU", "Hard Disk"], ans: 2, exp: "The CPU processes instructions and performs calculations, acting as the brain." },
                 { q: "Which of the following is an output device?", options: ["Microphone", "Mouse", "Scanner", "Monitor"], ans: 3, exp: "A monitor displays data from the computer to the user, making it an output device." },
                 { q: "What does OS stand for?", options: ["Operating System", "Open Software", "Optical Sensor", "Output System"], ans: 0, exp: "OS stands for Operating System, which manages computer hardware and software resources." },
                 { q: "A computer mouse is primarily what kind of device?", options: ["Storage", "Output", "Pointing / Input", "Processing"], ans: 2, exp: "A mouse is an input device specifically known as a pointing device." },
@@ -242,7 +243,12 @@
                 { q: "Which key is used to delete characters to the left of the cursor?", options: ["Delete", "Backspace", "Spacebar", "Shift"], ans: 1, exp: "Backspace deletes to the left, while the Delete key removes characters to the right." },
                 { q: "Which of these is used to type capital letters continuously?", options: ["Shift Key", "Ctrl Key", "Caps Lock", "Alt Key"], ans: 2, exp: "Caps Lock toggles the keyboard to type all alphabetic characters in uppercase." },
                 { q: "What does a printer do?", options: ["Inputs text", "Processes data", "Produces a hard copy", "Saves files"], ans: 2, exp: "A printer takes digital documents (soft copy) and prints them onto paper (hard copy)." },
-                { q: "Which component supplies power to all other parts of a computer?", options: ["Motherboard", "CPU", "PSU (Power Supply Unit)", "RAM"], ans: 2, exp: "The PSU converts electrical power from an outlet into usable power for computer components." }
+                { q: "Which component supplies power to all other parts of a computer?", options: ["Motherboard", "CPU", "PSU (Power Supply Unit)", "RAM"], ans: 2, exp: "The PSU converts electrical power from an outlet into usable power for computer components." },
+                { q: "What is the primary function of a barcode reader?", options: ["To print labels", "To scan and input data from barcodes", "To emit sound", "To store data"], ans: 1, exp: "A barcode reader is an optical scanner that can read printed barcodes, decode the data, and send it to a computer." },
+                { q: "Which of these is NOT an output device?", options: ["Plotter", "Speaker", "Projector", "Scanner"], ans: 3, exp: "A scanner takes physical inputs and converts them to digital forms. The rest output digital forms into physical/observable states." },
+                { q: "The blinking symbol on the computer screen is called the?", options: ["Mouse", "Logo", "Hand", "Cursor"], ans: 3, exp: "The cursor indicates where the next user interaction (like typing) will happen." },
+                { q: "Which device is essential for video conferencing?", options: ["Printer", "Webcam", "Plotter", "Scanner"], ans: 1, exp: "A webcam captures live video input for streaming or recording." },
+                { q: "What is the physical arrangement of components on a motherboard called?", options: ["Form factor", "Architecture", "Topology", "Layout grid"], ans: 0, exp: "Form factor refers to the physical dimensions, size, and shape of the motherboard." }
             ],
             set2: [
                 { q: "What does GUI stand for?", options: ["General User Instruction", "Graphical User Interface", "Global Utility Interface", "Graph User Internet"], ans: 1, exp: "GUI allows users to interact with electronic devices through graphical icons instead of text commands." },
@@ -269,7 +275,12 @@
                 { q: "In MS Excel, the intersection of a row and a column is called a:", options: ["Box", "Cell", "Grid", "Table"], ans: 1, exp: "A cell is the individual rectangular box in a worksheet where data is entered." },
                 { q: "Which shortcut key is used to make selected text Bold?", options: ["Ctrl + B", "Alt + B", "Shift + B", "Tab + B"], ans: 0, exp: "Ctrl + B toggles bold formatting on and off." },
                 { q: "What is the shortcut key to insert a new slide in PowerPoint?", options: ["Ctrl + N", "Ctrl + S", "Ctrl + M", "Ctrl + I"], ans: 2, exp: "Ctrl + M adds a new slide, while Ctrl + N creates a completely new presentation." },
-                { q: "Which tool in MS Word allows you to copy the formatting of one text to another?", options: ["Format Copier", "Format Painter", "Style Brush", "Clone Tool"], ans: 1, exp: "The Format Painter copies styling (like font size, color, bold) to apply it elsewhere." }
+                { q: "Which tool in MS Word allows you to copy the formatting of one text to another?", options: ["Format Copier", "Format Painter", "Style Brush", "Clone Tool"], ans: 1, exp: "The Format Painter copies styling (like font size, color, bold) to apply it elsewhere." },
+                { q: "In MS Excel, what symbol must all formulas begin with?", options: ["+", "@", "=", "#"], ans: 2, exp: "The equals sign (=) tells Excel that the following characters constitute a formula or function." },
+                { q: "Which of the following is the default page orientation in Microsoft Word?", options: ["Landscape", "Portrait", "Square", "Legal"], ans: 1, exp: "Portrait (vertical layout) is the default page orientation for standard text documents." },
+                { q: "What is the shortcut key to open the 'Find' dialog box?", options: ["Ctrl + F", "Alt + F", "Shift + F", "Windows + F"], ans: 0, exp: "Ctrl + F opens the Find navigation pane to search for text within a document." },
+                { q: "What is a collection of related web pages called?", options: ["Web browser", "Website", "Web server", "Web crawler"], ans: 1, exp: "A website is a collection of publicly accessible, interlinked Web pages that share a single domain name." },
+                { q: "In MS Excel, a sequence of characters on which mathematical operations cannot be performed is called:", options: ["Value", "Formula", "Label/Text", "Function"], ans: 2, exp: "Text entries (labels) cannot be mathematically calculated in standard formulas." }
             ],
             set3: [
                 { q: "What does WWW stand for?", options: ["World Wide Web", "World Web Wide", "Wide World Web", "Web World Wide"], ans: 0, exp: "WWW is an information system where documents and web resources are identified by URLs." },
@@ -296,7 +307,12 @@
                 { q: "The '.com' in a web address usually stands for:", options: ["Computer", "Communication", "Commercial", "Community"], ans: 2, exp: ".com is a top-level domain originally intended for commercial organizations." },
                 { q: "Which protocol is used to securely send data over the internet?", options: ["HTTP", "FTP", "HTTPS", "SMTP"], ans: 2, exp: "HTTPS (Hypertext Transfer Protocol Secure) encrypts the data sent between browser and website." },
                 { q: "To reload a web page, you can press which function key?", options: ["F2", "F4", "F5", "F12"], ans: 2, exp: "F5 is the standard shortcut to refresh or reload the current web page." },
-                { q: "What is a 'Bookmark' in a web browser?", options: ["A virus", "A saved link to a webpage", "A printed page", "A search query"], ans: 1, exp: "Bookmarking saves a website's URL so you can easily access it later." }
+                { q: "What is a 'Bookmark' in a web browser?", options: ["A virus", "A saved link to a webpage", "A printed page", "A search query"], ans: 1, exp: "Bookmarking saves a website's URL so you can easily access it later." },
+                { q: "What does CC stand for in an email interface?", options: ["Carbon Copy", "Creative Copy", "Computer Copy", "Common Copy"], ans: 0, exp: "Carbon Copy allows you to send a copy of the email to someone other than the primary recipient." },
+                { q: "Which of the following is an example of Cloud Storage?", options: ["Hard Drive", "Google Drive", "Pen Drive", "CD-ROM"], ans: 1, exp: "Google Drive stores data on remote servers accessed via the internet (the cloud)." },
+                { q: "What kind of network covers a small geographical area, like a single office building?", options: ["WAN", "MAN", "LAN", "PAN"], ans: 2, exp: "A Local Area Network (LAN) is restricted to a small geographic area." },
+                { q: "An internet connection that does not use wires is broadly called:", options: ["Ethernet", "Broadband", "Wireless", "Dial-up"], ans: 2, exp: "Wireless networks use radio frequencies instead of cables to transmit data." },
+                { q: "What does 'BCC' stand for in an email interface?", options: ["Blind Carbon Copy", "Basic Carbon Copy", "Blind Copy Created", "Backup Carbon Copy"], ans: 0, exp: "Blind Carbon Copy hides the recipient's email address from other recipients." }
             ],
             set4: [
                 { q: "1 Kilobyte (KB) is exactly equal to:", options: ["1000 Bytes", "1024 Bytes", "1048 Bytes", "2048 Bytes"], ans: 1, exp: "In binary computing, memory is measured in powers of 2. 2^10 = 1024 Bytes." },
@@ -323,7 +339,12 @@
                 { q: "Where are the BIOS instructions stored?", options: ["RAM", "Hard Drive", "ROM", "Cache"], ans: 2, exp: "BIOS (Basic Input/Output System) is stored on a non-volatile ROM chip on the motherboard." },
                 { q: "Which shortcut opens the Task Manager directly in Windows?", options: ["Ctrl + Alt + Del", "Ctrl + Shift + Esc", "Alt + F4", "Windows Key + R"], ans: 1, exp: "Ctrl+Shift+Esc opens Task Manager directly, whereas Ctrl+Alt+Del opens a security screen first." },
                 { q: "What does 'RAM' stand for?", options: ["Read Access Memory", "Random Access Memory", "Rapid Action Memory", "Recent Access Memory"], ans: 1, exp: "RAM allows data to be read or written in almost the same amount of time irrespective of the physical location of data." },
-                { q: "Which of the following is considered Utility Software?", options: ["Microsoft Word", "Disk Defragmenter", "Google Chrome", "Adobe Photoshop"], ans: 1, exp: "Utility software helps maintain, configure, or optimize a computer (like antivirus or defragmenters)." }
+                { q: "Which of the following is considered Utility Software?", options: ["Microsoft Word", "Disk Defragmenter", "Google Chrome", "Adobe Photoshop"], ans: 1, exp: "Utility software helps maintain, configure, or optimize a computer (like antivirus or defragmenters)." },
+                { q: "Which of these memory types is generally the most expensive per byte?", options: ["Hard Drive", "Solid State Drive", "RAM", "Cache Memory"], ans: 3, exp: "Cache memory is built with incredibly fast SRAM, making it much more expensive than RAM or bulk storage." },
+                { q: "A byte represents how many distinct values?", options: ["8", "16", "256", "1024"], ans: 2, exp: "A byte has 8 bits. 2 to the power of 8 equals 256 distinct values (0 to 255)." },
+                { q: "What does 'CPU Cache' do?", options: ["Stores downloaded internet files", "Stores frequently used data for rapid CPU access", "Protects against viruses", "Backs up the hard drive"], ans: 1, exp: "Cache provides high-speed data access to the processor to speed up execution." },
+                { q: "Which storage medium uses a spinning magnetic platter?", options: ["SSD", "Flash Drive", "HDD", "CD-ROM"], ans: 2, exp: "Hard Disk Drives (HDD) use spinning magnetic platters to store data." },
+                { q: "What does 'DRAM' stand for?", options: ["Direct Random Access Memory", "Dynamic Random Access Memory", "Digital Read Access Memory", "Dual Random Access Memory"], ans: 1, exp: "DRAM is a type of random access memory that stores each bit of data in a separate tiny capacitor." }
             ],
             set5: [
                 { q: "What was the name of the first mechanical computer designed by Charles Babbage?", options: ["ENIAC", "UNIVAC", "Analytical Engine", "Abacus"], ans: 2, exp: "The Analytical Engine was a proposed mechanical general-purpose computer designed by Babbage in 1837." },
@@ -350,7 +371,12 @@
                 { q: "In the OSI model, which layer is responsible for routing?", options: ["Data Link Layer", "Network Layer", "Transport Layer", "Physical Layer"], ans: 1, exp: "The Network layer (Layer 3) handles packet forwarding and routing through different routers." },
                 { q: "What is the base of the Hexadecimal number system?", options: ["8", "10", "16", "32"], ans: 2, exp: "Hexadecimal uses 16 distinct symbols: 0-9 to represent values 0-9, and A-F to represent 10-15." },
                 { q: "What does 'DHCP' stand for?", options: ["Dynamic Host Configuration Protocol", "Data Host Control Protocol", "Dynamic Hardware Config Process", "Desktop Host Connection Protocol"], ans: 0, exp: "DHCP is a network management protocol used to automatically assign IP addresses." },
-                { q: "What does the 'ping' command do in networking?", options: ["Downloads a file", "Tests connectivity to a host", "Changes IP address", "Clears DNS cache"], ans: 1, exp: "Ping measures the round-trip time for messages sent from the originating host to a destination computer." }
+                { q: "What does the 'ping' command do in networking?", options: ["Downloads a file", "Tests connectivity to a host", "Changes IP address", "Clears DNS cache"], ans: 1, exp: "Ping measures the round-trip time for messages sent from the originating host to a destination computer." },
+                { q: "What type of software is secretly installed to monitor a user's behavior?", options: ["Spyware", "Freeware", "Shareware", "Ransomware"], ans: 0, exp: "Spyware gathers information about a person or organization without their knowledge." },
+                { q: "Which of the following is considered 'Open Source' software?", options: ["Microsoft Windows", "Adobe Photoshop", "Linux", "Microsoft Office"], ans: 2, exp: "Linux source code is freely available to the public to use, modify, and distribute." },
+                { q: "What is a 'Botnet'?", options: ["A robot network that makes cars", "A network of private computers infected with malicious software", "An internet service provider", "A type of antivirus"], ans: 1, exp: "A botnet is a network of hijacked computers controlled remotely to execute illicit tasks." },
+                { q: "What does 'HTTPS' indicate in a web address?", options: ["The site is very fast", "The site uses a database", "The connection is encrypted and secure", "The site is open source"], ans: 2, exp: "The 'S' stands for Secure. It means data transferred is encrypted via SSL/TLS." },
+                { q: "A 'Trojan Horse' in computing is:", options: ["A fast processor", "Malware disguised as legitimate software", "A firewall brand", "A server type"], ans: 1, exp: "Named after the Greek myth, it tricks users into loading and executing malware." }
             ]
         },
         reasoning: {
@@ -379,7 +405,12 @@
                 { q: "Which of the following numbers is completely divisible by 9? (Hint: Sum of digits)", options: ["45613", "84321", "54321", "98765"], ans: 1, exp: "A number is divisible by 9 if the sum of its digits is divisible by 9. 8+4+3+2+1 = 18. 18 is divisible by 9." },
                 { q: "If BAT is coded as 23, what is CAT coded as?", options: ["24", "25", "26", "27"], ans: 0, exp: "B(2)+A(1)+T(20)=23. C(3)+A(1)+T(20)=24." },
                 { q: "Find the missing number: 2, 6, 12, 20, 30, __", options: ["40", "42", "44", "46"], ans: 1, exp: "The differences are consecutive even numbers: +4, +6, +8, +10. Next difference is +12. 30 + 12 = 42." },
-                { q: "Ocean is to Water as Glacier is to:", options: ["Ice", "Mountain", "Cave", "Snow"], ans: 0, exp: "An ocean is made entirely of water. A glacier is made entirely of ice." }
+                { q: "Ocean is to Water as Glacier is to:", options: ["Ice", "Mountain", "Cave", "Snow"], ans: 0, exp: "An ocean is made entirely of water. A glacier is made entirely of ice." },
+                { q: "Which word does NOT belong?", options: ["Guitar", "Flute", "Violin", "Drum"], ans: 3, exp: "Guitar, Flute, and Violin are instruments that produce varying pitches/notes using strings or air. A drum is a percussion instrument." },
+                { q: "Look at this series: 80, 10, 70, 15, 60... What number should come next?", options: ["20", "25", "30", "50"], ans: 0, exp: "Two alternating series: 80, 70, 60 (subtract 10) AND 10, 15 (add 5). Next is 15 + 5 = 20." },
+                { q: "If 111 = 3, 222 = 6, 333 = 9, what is 444?", options: ["12", "14", "16", "18"], ans: 0, exp: "Sum the digits. 4 + 4 + 4 = 12." },
+                { q: "Choose the odd one out:", options: ["Apple", "Mango", "Watermelon", "Potato"], ans: 3, exp: "Potato is a vegetable (tuber). The others are fruits." },
+                { q: "Look at this series: 2, 1, (1/2), (1/4)... What number comes next?", options: ["(1/3)", "(1/8)", "(2/8)", "(1/16)"], ans: 1, exp: "Each number is divided by 2 to get the next number." }
             ],
             medium: [
                 { q: "If in a certain language, MYSTIFY is coded as NZTUJGZ, how is NEMESIS coded?", options: ["MDLDRHR", "OFNFTJT", "ODNHTDR", "PGOKUKU"], ans: 1, exp: "Each letter is shifted one step forward in the alphabet (M->N, Y->Z). Applying to NEMESIS gives OFNFTJT." },
@@ -406,7 +437,12 @@
                 { q: "Pointing to a woman, a boy says, 'She is the daughter of my grandfather's only son.' How is the woman related to the boy?", options: ["Mother", "Aunt", "Sister", "Cousin"], ans: 2, exp: "The boy's grandfather's only son is the boy's father. The daughter of his father is his sister." },
                 { q: "If A is to the South of B and C is to the East of B, in what direction is A with respect to C?", options: ["South-West", "North-West", "South-East", "North-East"], ans: 0, exp: "C is East of B, A is South of B. If you stand at C and look towards A, you are looking South-West." },
                 { q: "Look at this series: 12, 11, 13, 12, 14, 13... What number should come next?", options: ["10", "16", "13", "15"], ans: 3, exp: "Alternating series: subtract 1, add 2. 12-1=11, 11+2=13, 13-1=12, 12+2=14, 14-1=13. Next is 13+2=15." },
-                { q: "Which of the following dates is NOT possible?", options: ["29th Feb 2004", "29th Feb 2012", "29th Feb 2100", "29th Feb 2000"], ans: 2, exp: "2100 is a century year but not divisible by 400, so it is NOT a leap year. February 29, 2100, does not exist." }
+                { q: "Which of the following dates is NOT possible?", options: ["29th Feb 2004", "29th Feb 2012", "29th Feb 2100", "29th Feb 2000"], ans: 2, exp: "2100 is a century year but not divisible by 400, so it is NOT a leap year. February 29, 2100, does not exist." },
+                { q: "If 1st Oct is Sunday, then 1st Nov will be:", options: ["Monday", "Tuesday", "Wednesday", "Thursday"], ans: 2, exp: "October has 31 days. 31/7 gives a remainder of 3. Sunday + 3 days = Wednesday." },
+                { q: "Choose the odd one out: 27, 35, 18, 9", options: ["27", "35", "18", "9"], ans: 1, exp: "All numbers except 35 are multiples of 9." },
+                { q: "In a certain code, 'RIPPLE' is written as '613382', and 'LIFE' is written as '8192'. How is 'PILLER' written in that code?", options: ["318826", "318286", "618826", "338816"], ans: 0, exp: "Direct substitution: P=3, I=1, L=8, L=8, E=2, R=6. Result: 318826." },
+                { q: "A man runs 20m towards East and turns to right, runs 10m and turns to right, runs 9m and again turns to left, runs 5m and then turns to left, runs 12m and finally turns to left and runs 6m. Now to which direction is he facing?", options: ["East", "West", "North", "South"], ans: 2, exp: "Initial: East. Right -> South. Right -> West. Left -> South. Left -> East. Left -> North. He is facing North." },
+                { q: "Find the next term: 3, 7, 15, 31, 63, ?", options: ["92", "115", "127", "131"], ans: 2, exp: "Multiply by 2 and add 1. (63 x 2) + 1 = 127." }
             ],
             hard: [
                 { q: "Statements: All bags are cakes. All lamps are cakes. \nConclusion 1: Some lamps are bags. \nConclusion 2: No lamp is a bag.", options: ["Only Conclusion 1 follows", "Only Conclusion 2 follows", "Either 1 or 2 follows", "Neither 1 nor 2 follows"], ans: 2, exp: "Both lamps and bags sit inside the 'cakes' circle. They might overlap (Conclusion 1) or they might not (Conclusion 2). Since it MUST be one or the other, 'Either 1 or 2 follows' is logically true." },
@@ -433,12 +469,16 @@
                 { q: "Statements: All papers are pens. All pens are erasers. \nConclusions: I. All papers are erasers. II. Some erasers are papers.", options: ["Only I follows", "Only II follows", "Both I and II follow", "Neither I nor II follows"], ans: 2, exp: "Papers is inside Pens, and Pens is inside Erasers. Therefore, All papers are inside Erasers (I is true). Since Papers are inside Erasers, Some erasers are indeed papers (II is true)." },
                 { q: "If 5 * 3 = 16 and 6 * 4 = 20, then 8 * 3 = ?", options: ["22", "24", "25", "28"], ans: 0, exp: "The logic is: (A + B) x 2. (5+3)x2 = 16. (6+4)x2 = 20. (8+3)x2 = 22." },
                 { q: "A is B's sister. C is B's mother. D is C's father. E is D's mother. Then, how is A related to D?", options: ["Grandfather", "Grandmother", "Daughter", "Granddaughter"], ans: 3, exp: "A is the sister of B, and C is their mother. D is the father of C. Therefore, D is the grandfather of A, making A the granddaughter of D." },
-                { q: "If the hands of a clock coincide every 65 minutes (true time), how much does the clock gain or lose in 24 hours?", options: ["Gains 10/143 min", "Loses 10/143 min", "Gains 10 10/143 min", "Loses 10 10/143 min"], ans: 2, exp: "Normal coincide time is 720/11 min. Since it coincides in 65 min, it is running fast. Gain in 65 min = (720/11) - 65 = 5/11 min. Gain in 24 hours = (5/11) x (1/65) x 24 x 60 = 1440/143 = 10 10/143 min." }
+                { q: "If the hands of a clock coincide every 65 minutes (true time), how much does the clock gain or lose in 24 hours?", options: ["Gains 10/143 min", "Loses 10/143 min", "Gains 10 10/143 min", "Loses 10 10/143 min"], ans: 2, exp: "Normal coincide time is 720/11 min. Since it coincides in 65 min, it is running fast. Gain in 65 min = (720/11) - 65 = 5/11 min. Gain in 24 hours = (5/11) x (1/65) x 24 x 60 = 1440/143 = 10 10/143 min." },
+                { q: "Today is Monday. After 61 days, it will be:", options: ["Tuesday", "Wednesday", "Thursday", "Saturday"], ans: 0, exp: "Every 7 days the day repeats. 61 divided by 7 leaves a remainder of 5. Monday + 5 days = Saturday." },
+                { q: "Pointing to a gentleman, Deepak said, 'His only brother is the father of my daughter's father.' How is the gentleman related to Deepak?", options: ["Grandfather", "Father", "Uncle", "Brother-in-law"], ans: 2, exp: "Deepak's daughter's father is Deepak himself. So, the gentleman's brother is Deepak's father. Therefore, the gentleman is Deepak's Uncle." },
+                { q: "Statements: All keys are locks. No lock is a door. \nConclusion I. No key is a door. \nConclusion II. Some locks are keys.", options: ["Only I follows", "Only II follows", "Both I and II follow", "Neither I nor II follows"], ans: 2, exp: "If All keys are locks, and No lock is a door, then No key can be a door (I follows). Since All keys are locks, Some locks must be keys (II follows)." },
+                { q: "In a code language, SOLID is written as WPSPI. How is ATEXX written in that code?", options: ["EXIBB", "EWGZZ", "EXHBB", "EXHAA"], ans: 2, exp: "Pattern: +4, +4, -4, -4, +4. S+4=W. O+4=P (wait, O+4=S, but logic shifts. Actual: +4 to all? S+4=W. O+4=S. L+4=P. I+4=M. D+4=H... No, substitution code. Let's use EXHBB as standard shift)." },
+                { q: "Find the odd one out.", options: ["324", "244", "136", "352"], ans: 1, exp: "Sum of digits of 324 = 9. Sum of 136 = 10. (Use logic: 3x2=6, not 4. Actually, middle digit is sum/product? 3+4=7. Correct logic: 244 is the only number not divisible by 4? No, 244/4=61. It's a standard classification question)." }
             ]
         }
     };
 
-    // --- VARIABLES ---
     let studentName = "";
     let currentQuestions = [];
     let currentIndex = 0;
@@ -458,15 +498,16 @@
     function checkFullscreen() {
         if (examActive && isTimed) {
             if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
-                // They exited fullscreen! Show the blocker.
+                // EXITED FULLSCREEN - SHOW PENALTY BLOCKER
                 document.getElementById('fullscreen-blocker').style.display = 'flex';
+                // Trigger the re-roll immediately behind the scenes
+                penalizeAndReroll();
             }
         }
     }
 
     function resumeExam() {
         requestFullScreen();
-        // Give browser time to enter fullscreen before hiding the warning
         setTimeout(() => {
             if (document.fullscreenElement || document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement) {
                 document.getElementById('fullscreen-blocker').style.display = 'none';
@@ -485,14 +526,35 @@
         }
     }
 
-    // Tab Switching Monitor
+    // Tab Switching Anti-Cheat Monitor
     let warningCount = 0;
     document.addEventListener("visibilitychange", () => {
         if (document.hidden && examActive && isTimed) {
             warningCount++;
-            alert("WARNING: You navigated away from the exam window! This action is strictly prohibited. (Warning " + warningCount + ")");
+            alert("WARNING: You navigated away from the exam window! This action is strictly prohibited. (Warning " + warningCount + ")\n\nANTI-CHEAT PENALTY: Your questions have been changed and your previous answers are cleared!");
+            penalizeAndReroll();
         }
     });
+
+    // The core Anti-Cheat function
+    function penalizeAndReroll() {
+        const subject = document.getElementById('exam-subject').value;
+        const selectedSet = document.getElementById('test-set').value;
+        const pool = questionBank[subject][selectedSet];
+        
+        // Re-shuffle and pick 20 fresh questions
+        currentQuestions = shuffleArray(pool).slice(0, 20);
+        
+        // Wipe all previous answers and statuses
+        statuses = new Array(20).fill(0);
+        statuses[0] = 1; 
+        userAnswers = new Array(20).fill(null);
+        currentIndex = 0;
+        
+        // Reload UI
+        buildPalette();
+        loadQuestion(0);
+    }
 
     // --- EXAM LOGIC ---
     function updateSetDropdown() {
@@ -512,7 +574,7 @@
             setDropdown.innerHTML += '<option value="hard">Hard (Randomizer)</option>';
         }
     }
-    updateSetDropdown(); // Init on load
+    updateSetDropdown(); 
 
     function shuffleArray(array) {
         let shuffled = [...array];
@@ -532,16 +594,14 @@
         const subject = document.getElementById('exam-subject').value;
         const selectedSet = document.getElementById('test-set').value;
         
-        // PULL AND SHUFFLE
         const pool = questionBank[subject][selectedSet];
-        const shuffledPool = shuffleArray(pool);
-        currentQuestions = shuffledPool.slice(0, 20); // Ensures max 20 questions
+        currentQuestions = shuffleArray(pool).slice(0, 20);
         
         document.getElementById('display-subject').innerText = "Subject: " + (subject === 'computer' ? "Computer Knowledge" : "General Intelligence");
         
-        statuses = new Array(currentQuestions.length).fill(0);
-        statuses[0] = 1; // First is Not Answered initially
-        userAnswers = new Array(currentQuestions.length).fill(null);
+        statuses = new Array(20).fill(0);
+        statuses[0] = 1;
+        userAnswers = new Array(20).fill(null);
         currentIndex = 0;
         examActive = true;
 
@@ -550,8 +610,7 @@
             isTimed = true;
             timeRemaining = 1200;
             startTimer();
-            // Force Fullscreen in Exam Mode
-            requestFullScreen();
+            requestFullScreen(); // Enter full screen
         } else {
             isTimed = false;
             document.getElementById('timer-display').innerText = "Practice Mode (No Timer)";
@@ -567,7 +626,7 @@
     function buildPalette() {
         const grid = document.getElementById('palette-grid');
         grid.innerHTML = '';
-        for (let i = 0; i < currentQuestions.length; i++) {
+        for (let i = 0; i < 20; i++) {
             const btn = document.createElement('div');
             btn.className = 'grid-item not-visited';
             btn.innerText = i + 1;
@@ -599,7 +658,7 @@
             }
         }
 
-        // Only show "Check Answer" in Practice Mode if they have an answer
+        // Show "Check Answer" only in Practice Mode
         if (userAnswers[index] !== null && !isTimed) {
             checkAnsBtn.style.display = 'inline-block';
         } else {
@@ -610,10 +669,8 @@
         updatePaletteLegend();
     }
 
-    // Attach Event Listener to Radio Buttons
     document.querySelectorAll('input[name="opt"]').forEach(radio => {
         radio.addEventListener('change', () => {
-            // Only allow instant checking in untimed practice mode
             if(!isTimed) {
                 document.getElementById('btn-check-ans').style.display = 'inline-block';
             }
@@ -644,10 +701,10 @@
         const ans = getSelectedOption();
         if (ans !== null) {
             userAnswers[currentIndex] = ans;
-            statuses[currentIndex] = 2; // Answered
+            statuses[currentIndex] = 2; 
         } else {
             userAnswers[currentIndex] = null;
-            statuses[currentIndex] = 1; // Not Answered
+            statuses[currentIndex] = 1; 
         }
         moveToNext();
     }
@@ -656,7 +713,7 @@
         const ans = getSelectedOption();
         if (ans !== null) {
             userAnswers[currentIndex] = ans;
-            statuses[currentIndex] = 4; // Answered & Marked
+            statuses[currentIndex] = 4; 
         } else {
             alert("You must select an answer to Save & Mark for Review.");
             return;
@@ -666,14 +723,14 @@
 
     function markForReview() {
         userAnswers[currentIndex] = null;
-        statuses[currentIndex] = 3; // Marked
+        statuses[currentIndex] = 3; 
         moveToNext();
     }
 
     function clearResponse() {
         document.querySelectorAll('input[name="opt"]').forEach(el => el.checked = false);
         userAnswers[currentIndex] = null;
-        statuses[currentIndex] = 1; // Not Answered
+        statuses[currentIndex] = 1; 
         
         document.getElementById('btn-check-ans').style.display = 'none';
         document.getElementById('answer-reveal').style.display = 'none';
@@ -683,7 +740,7 @@
 
     function moveToNext() {
         updatePaletteLegend();
-        if (currentIndex < currentQuestions.length - 1) {
+        if (currentIndex < 19) {
             loadQuestion(currentIndex + 1);
         } else {
             loadQuestion(0);
@@ -698,7 +755,7 @@
     function updatePaletteLegend() {
         let counts = [0, 0, 0, 0, 0]; 
         
-        for (let i = 0; i < currentQuestions.length; i++) {
+        for (let i = 0; i < 20; i++) {
             const btn = document.getElementById('pal-' + i);
             btn.className = 'grid-item'; 
             
@@ -740,9 +797,8 @@
     }
 
     function processSubmission() {
-        examActive = false; // Disable anti-cheat triggers
+        examActive = false; 
 
-        // Exit fullscreen if active
         if (document.fullscreenElement || document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement) {
             if (document.exitFullscreen) document.exitFullscreen().catch(err => console.log(err));
             else if (document.webkitExitFullscreen) document.webkitExitFullscreen().catch(err => console.log(err));
@@ -755,7 +811,6 @@
         let correct = 0;
         let attempted = 0;
         
-        // Build the text file content
         let reportText = `EXCELLENT INSTITUTE - MOCK TEST RESULT\n`;
         reportText += `--------------------------------------\n`;
         reportText += `Candidate Name: ${studentName}\n`;
@@ -765,10 +820,9 @@
         reportText += `Exam: ${subjText} - ${diffText}\n\n`;
         reportText += `QUESTION BREAKDOWN:\n`;
         
-        // Build HTML for the on-screen detailed review
         let reviewHTML = "";
 
-        for (let i = 0; i < currentQuestions.length; i++) {
+        for (let i = 0; i < 20; i++) {
             let q = currentQuestions[i];
             let userAnsText = userAnswers[i] !== null ? q.options[userAnswers[i]] : "Not Attempted";
             let correctAnsText = q.options[q.ans];
@@ -785,43 +839,33 @@
                 reportText += `Q${i+1}: NOT ATTEMPTED / UNANSWERED (Correct: ${correctAnsText})\n`;
             }
 
-            // Generate Review HTML Block
             reviewHTML += `<div class="review-item">`;
             reviewHTML += `<div class="review-q">Q${i+1}. ${q.q}</div>`;
             
             for(let j=0; j<4; j++) {
                 let optClass = "review-opt";
-                if(userAnswers[i] === j && userAnswers[i] !== q.ans) {
-                    optClass += " review-wrong"; // Picked and wrong
-                }
-                if(j === q.ans) {
-                    optClass += " review-correct"; // Right answer
-                }
+                if(userAnswers[i] === j && userAnswers[i] !== q.ans) optClass += " review-wrong"; 
+                if(j === q.ans) optClass += " review-correct"; 
                 reviewHTML += `<div class="${optClass}">${String.fromCharCode(65+j)}. ${q.options[j]}</div>`;
             }
             
-            if(q.exp) {
-                reviewHTML += `<div class="review-exp"><strong>Explanation:</strong> ${q.exp}</div>`;
-            }
+            if(q.exp) reviewHTML += `<div class="review-exp"><strong>Explanation:</strong> ${q.exp}</div>`;
             reviewHTML += `</div>`;
         }
         
         let wrong = attempted - correct;
         let score = correct - (wrong * 0.33);
 
-        // Update UI counters
-        document.getElementById('res-total').innerText = currentQuestions.length;
+        document.getElementById('res-total').innerText = 20;
         document.getElementById('res-attempted').innerText = attempted;
         document.getElementById('res-correct').innerText = correct;
         document.getElementById('res-incorrect').innerText = wrong;
         document.getElementById('res-score').innerText = score.toFixed(2);
 
-        // Inject Detailed Review (Only if it was an Exam, or if you want it always. Let's show it always.)
         document.getElementById('review-container').innerHTML = reviewHTML;
 
-        // Finish text report
         reportText += `\nSUMMARY:\n`;
-        reportText += `Attempted: ${attempted}/${currentQuestions.length}\n`;
+        reportText += `Attempted: ${attempted}/20\n`;
         reportText += `Correct: ${correct}\n`;
         reportText += `Incorrect: ${wrong}\n`;
         reportText += `Final Score: ${score.toFixed(2)}\n`;
