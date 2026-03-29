@@ -54,7 +54,7 @@ const questionBank = {
             { q: "Which port is most commonly used to connect a wired microphone to a PC?", options: ["USB", "HDMI", "3.5mm Audio Jack", "VGA"], ans: 2, exp: "While USB is common now, the traditional and most universal audio input is the 3.5mm pink/red jack." },
             { q: "What is the primary purpose of a computer's power supply (PSU)?", options: ["To store data", "To convert AC power from the wall to DC power", "To cool the system", "To calculate graphics"], ans: 1, exp: "Computer components require direct current (DC), but wall outlets provide alternating current (AC)." },
             { q: "Which of the following is an example of an optical storage device?", options: ["Hard Disk", "Flash Drive", "Blu-ray Disc", "Floppy Disk"], ans: 2, exp: "Blu-ray discs are read using a blue-violet laser, making them optical storage." },
-            { q: "The number of pixels displayed on a screen is known as the screen's:", options: ["Refresh Rate", "Aspect Ratio", "Resolution", "Color Depth"], ans: 2, exp: "Resolution (e.g., 1920x1080) defines how many pixels make up the display." },
+            { q: "The number of pixels displayed on a screen is known as the screen's:", options: ["Refresh Rate", "Aspect Ratio", "Resolution", "Color Depth"], ans: 2, exp: "Resolution (e.g., 1920x1080) defines how many pixels make up the display." }
             
         ],
         set2: [
@@ -108,7 +108,7 @@ const questionBank = {
             { q: "Which feature in MS Word allows you to type over existing text, replacing it?", options: ["Insert Mode", "Overtype Mode", "Edit Mode", "Replace Mode"], ans: 1, exp: "Overtype mode (toggled via the Insert key) replaces characters to the right of the cursor as you type." },
             { q: "What does the 'IF' function do in Excel?", options: ["Averages numbers", "Checks whether a condition is met and returns one value if True, another if False", "Counts empty cells", "Finds the maximum value"], ans: 1, exp: "The IF function is a logical test: =IF(condition, value_if_true, value_if_false)." },
             {q: "Which shortcut key is used to refresh the active window in Windows?", options: ["F2", "F3", "F4", "F5"], ans: 3, exp: "F5 reloads/refreshes the current desktop or browser window." },
-            {q: "In PowerPoint, what view displays all slides as thumbnails for easy rearranging?", options: ["Slide Show", "Normal View", "Slide Sorter", "Notes Page"], ans: 2, exp: "Slide Sorter view gives you a bird's-eye view of the entire presentation." },
+            {q: "In PowerPoint, what view displays all slides as thumbnails for easy rearranging?", options: ["Slide Show", "Normal View", "Slide Sorter", "Notes Page"], ans: 2, exp: "Slide Sorter view gives you a bird's-eye view of the entire presentation." }
         ],
         set3: [
             // INTERNET, NETWORKING & PROTOCOLS
