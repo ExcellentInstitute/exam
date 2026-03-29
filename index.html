@@ -106,6 +106,7 @@
         .review-wrong { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; text-decoration: line-through; }
         .review-exp { margin-top: 15px; padding-top: 10px; border-top: 1px dashed #ccc; font-size: 15px; color: #444; }
 
+        /* ANTI-CHEAT FULLSCREEN BLOCKER */
         #fullscreen-blocker {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background-color: #d32f2f; z-index: 99999; flex-direction: column;
@@ -272,6 +273,7 @@
 <script>
     // ==========================================
     // GOOGLE SHEET CONFIGURATION
+    // PASTE YOUR URL HERE:
     // ==========================================
     const GAS_WEB_APP_URL = 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL'; 
     const SYSTEM_PASSWORD = 'excellent@9658'; 
@@ -286,13 +288,12 @@
     let timeRemaining = 1200; 
     let isTimed = true;
     let examActive = false;
-    let cachedDatabase = null; // Stores the pre-fetched database
+    let cachedDatabase = null;
 
     // --- BACKGROUND PRE-FETCH LOGIC ---
     async function preloadDatabase() {
         if (GAS_WEB_APP_URL === 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL' || GAS_WEB_APP_URL === '') return;
 
-        // Check local session cache to save bandwidth on refresh
         const stored = sessionStorage.getItem('excellent_db_cache');
         if (stored) {
             cachedDatabase = JSON.parse(stored);
@@ -304,11 +305,10 @@
             const data = await response.json();
             if(!data.error) {
                 cachedDatabase = data.students || [];
-                // Save it to cache for this session
                 sessionStorage.setItem('excellent_db_cache', JSON.stringify(cachedDatabase));
             }
         } catch (e) {
-            console.log("Background preload failed. Will try again on click.");
+            console.log("Preload failed. Will try on click.");
         }
     }
 
@@ -342,7 +342,6 @@
             return;
         }
 
-        // Use the cached database if available, otherwise fetch it
         let studentsData = cachedDatabase;
 
         if (!studentsData) {
@@ -353,7 +352,6 @@
                 studentsData = data.students || [];
                 sessionStorage.setItem('excellent_db_cache', JSON.stringify(studentsData));
             } catch (error) {
-                console.error("Database fetch error:", error);
                 studentName = nameInput;
                 showGuestScreen(`Could not connect to database. Proceeding offline as Guest: ${studentName}`);
                 return;
@@ -441,11 +439,9 @@
 
     function finalizeStart() {
         document.getElementById('display-name').innerText = studentName;
-        
         const sidebarImg = document.getElementById('sidebar-photo');
         sidebarImg.src = studentPhotoUrl || 'https://via.placeholder.com/90?text=Guest';
         sidebarImg.onerror = function() { this.src = 'https://via.placeholder.com/90?text=Guest'; };
-
         generateExamData();
     }
 
@@ -484,11 +480,9 @@
         }
     }
 
-    let warningCount = 0;
     document.addEventListener("visibilitychange", () => {
         if (document.hidden && examActive && isTimed) {
-            warningCount++;
-            alert("WARNING: You navigated away from the exam window! This action is strictly prohibited. (Warning " + warningCount + ")\n\nANTI-CHEAT PENALTY: Your questions have been changed and previous answers wiped!");
+            alert("WARNING: You navigated away from the exam window! This action is strictly prohibited.\n\nANTI-CHEAT PENALTY: Your questions have been changed and previous answers wiped!");
             penalizeAndReroll();
         }
     });
@@ -528,7 +522,7 @@
     }
     
     window.onload = () => {
-        preloadDatabase(); // Fetch DB silently when page opens
+        preloadDatabase(); // Fetch silently
         updateSetDropdown();
         makeDraggable(document.getElementById('drag-question-area'));
         makeDraggable(document.getElementById('drag-palette'));
