@@ -43,7 +43,7 @@
         .match-grid { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 20px; }
         .match-card { border: 2px solid #ccc; border-radius: 8px; padding: 15px; cursor: pointer; width: 140px; transition: 0.3s; background: white;}
         .match-card:hover { border-color: #2c6eb5; background: #e6f0fa; transform: translateY(-3px); box-shadow: 0 4px 8px rgba(0,0,0,0.1);}
-        .match-card img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 2px solid #eee;}
+        .match-card img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 2px solid #eee; background-color: #fff;}
         .match-card p { margin: 0; font-size: 14px; font-weight: bold; color: #333; word-wrap: break-word;}
 
         #exam-interface { display: none; height: calc(100vh - 54px); flex-direction: row; }
@@ -73,7 +73,7 @@
         
         .right-panel { width: 330px; background: #f4f7f6; display: flex; flex-direction: column; }
         .candidate-info { padding: 15px; text-align: center; border-bottom: 1px solid #ccc; background: white;}
-        .candidate-info img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 2px solid #ddd;}
+        .candidate-info img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 2px solid #ddd; background-color: #fff;}
         .candidate-info h3 { margin: 0; color: #2c6eb5; font-size: 18px; }
         .palette-legend { padding: 10px; font-size: 12px; display: flex; flex-wrap: wrap; border-bottom: 1px solid #ccc; background: white;}
         .legend-item { width: 50%; display: flex; align-items: center; margin-bottom: 12px; }
@@ -106,7 +106,6 @@
         .review-wrong { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; text-decoration: line-through; }
         .review-exp { margin-top: 15px; padding-top: 10px; border-top: 1px dashed #ccc; font-size: 15px; color: #444; }
 
-        /* ANTI-CHEAT FULLSCREEN BLOCKER */
         #fullscreen-blocker {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background-color: #d32f2f; z-index: 99999; flex-direction: column;
@@ -168,7 +167,7 @@
 
         <div id="verify-section">
             <div id="single-match-view" style="display: none;">
-                <img id="verify-img" src="https://via.placeholder.com/150?text=No+Photo" alt="Profile Photo">
+                <img id="verify-img" src="https://via.placeholder.com/150?text=No+Photo" alt="Profile Photo" onerror="this.src='https://via.placeholder.com/150?text=No+Photo'">
                 <h3 id="verify-text">Fetching data...</h3>
             </div>
             
@@ -229,7 +228,7 @@
         <div class="right-panel">
             <div class="candidate-info">
                 <div style="font-size: 12px; color: #666; margin-bottom: 5px;">Candidate:</div>
-                <img id="sidebar-photo" src="https://via.placeholder.com/90?text=Guest" alt="Candidate">
+                <img id="sidebar-photo" src="https://via.placeholder.com/90?text=Guest" alt="Candidate" onerror="this.src='https://via.placeholder.com/90?text=Guest'">
                 <h3 id="display-name">Student Name</h3>
             </div>
             <div class="palette-legend">
@@ -264,7 +263,8 @@
             </div>
             
             <h3 style="color: #2c6eb5; border-bottom: 2px solid #ccc; padding-bottom: 5px;">Detailed Review</h3>
-            <div id="review-container"></div>
+            <div id="review-container">
+                </div>
 
             <br>
             <button class="start-btn" onclick="location.reload()">Return to Setup Screen</button>
@@ -290,12 +290,25 @@
     let examActive = false;
 
     // --- GOOGLE SHEET FETCH & FUZZY VERIFICATION LOGIC ---
+    
+    // UNIVERSAL GOOGLE DRIVE LINK FIXER
     function formatDriveLink(url) {
         if (!url) return 'https://via.placeholder.com/150?text=No+Photo';
-        const driveRegex = /drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/;
-        const match = url.match(driveRegex);
-        if (match && match[1]) {
-            return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+        
+        // Match /file/d/ID
+        const driveRegex1 = /drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/;
+        // Match /open?id=ID
+        const driveRegex2 = /drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/;
+        // Match /uc?id=ID
+        const driveRegex3 = /drive\.google\.com\/uc\?.*id=([a-zA-Z0-9_-]+)/;
+
+        let id = null;
+        if (url.match(driveRegex1)) id = url.match(driveRegex1)[1];
+        else if (url.match(driveRegex2)) id = url.match(driveRegex2)[1];
+        else if (url.match(driveRegex3)) id = url.match(driveRegex3)[1];
+
+        if (id) {
+            return `https://drive.google.com/uc?export=view&id=${id}`;
         }
         return url; 
     }
@@ -329,7 +342,7 @@
             const searchTerm = nameInput.toLowerCase();
             
             // Fuzzy Match: Find anyone whose name includes the typed text
-            const matches = students.filter(s => s.name.toLowerCase().includes(searchTerm));
+            const matches = students.filter(s => s.name && s.name.toLowerCase().includes(searchTerm));
 
             if (matches.length === 0) {
                 studentName = nameInput;
@@ -338,7 +351,7 @@
                 // Exactly 1 match
                 const s = matches[0];
                 studentName = s.name;
-                studentPhotoUrl = formatDriveLink(s.image || s.photo || s.profilePic || null);
+                studentPhotoUrl = formatDriveLink(s.image || s.photo || s.profilePic || s.picture || s.url || s.img || null);
                 showSingleMatchScreen();
             } else {
                 // Multiple matches
@@ -371,7 +384,8 @@
         document.getElementById('multi-match-view').style.display = 'none';
         document.getElementById('btn-confirm-single').style.display = 'inline-block';
 
-        document.getElementById('verify-img').src = studentPhotoUrl;
+        const verifyImg = document.getElementById('verify-img');
+        verifyImg.src = studentPhotoUrl || 'https://via.placeholder.com/150?text=No+Photo';
         document.getElementById('verify-text').innerText = `Hello, ${studentName}. Is this you?`;
     }
 
@@ -380,20 +394,24 @@
         document.getElementById('verify-section').style.display = 'block';
         document.getElementById('single-match-view').style.display = 'none';
         document.getElementById('multi-match-view').style.display = 'block';
-        document.getElementById('btn-confirm-single').style.display = 'none'; // Hide generic 'Yes' button
+        document.getElementById('btn-confirm-single').style.display = 'none'; 
 
         const grid = document.getElementById('match-grid-container');
         grid.innerHTML = '';
 
         matches.forEach(s => {
-            const picUrl = formatDriveLink(s.image || s.photo || s.profilePic || null);
+            const rawUrl = s.image || s.photo || s.profilePic || s.picture || s.url || s.img || null;
+            const picUrl = formatDriveLink(rawUrl);
+            
             const card = document.createElement('div');
             card.className = 'match-card';
+            
+            // Added onerror fallback directly into the injected HTML
             card.innerHTML = `
-                <img src="${picUrl}" alt="${s.name}">
+                <img src="${picUrl}" alt="${s.name}" onerror="this.src='https://via.placeholder.com/150?text=No+Photo'">
                 <p>${s.name}</p>
             `;
-            // If they click a specific card, set their identity and start
+            
             card.onclick = () => {
                 studentName = s.name;
                 studentPhotoUrl = picUrl;
@@ -414,7 +432,15 @@
 
     function finalizeStart() {
         document.getElementById('display-name').innerText = studentName;
-        document.getElementById('sidebar-photo').src = studentPhotoUrl || 'https://via.placeholder.com/90?text=Guest';
+        
+        const sidebarImg = document.getElementById('sidebar-photo');
+        sidebarImg.src = studentPhotoUrl || 'https://via.placeholder.com/90?text=Guest';
+        
+        // Add safety fallback if the image completely fails to load
+        sidebarImg.onerror = function() {
+            this.src = 'https://via.placeholder.com/90?text=Guest';
+        };
+
         generateExamData();
     }
 
@@ -457,7 +483,7 @@
     document.addEventListener("visibilitychange", () => {
         if (document.hidden && examActive && isTimed) {
             warningCount++;
-            alert("WARNING: You navigated away from the exam window! This action is strictly prohibited.\n\nANTI-CHEAT PENALTY: Your questions have been changed and previous answers wiped!");
+            alert("WARNING: You navigated away from the exam window! This action is strictly prohibited. (Warning " + warningCount + ")\n\nANTI-CHEAT PENALTY: Your questions have been changed and previous answers wiped!");
             penalizeAndReroll();
         }
     });
