@@ -143,13 +143,19 @@
                 <div class="input-group">
                     <label for="exam-subject">Select Exam Subject:</label>
                     <select id="exam-subject" onchange="updateSetDropdown()">
-                        <option value="computer">Basic Computer Knowledge</option>
+                        <option value="computer" selected>Basic Computer Knowledge</option>
                         <option value="reasoning">General Intelligence & Reasoning</option>
                     </select>
                 </div>
                 <div class="input-group">
                     <label for="test-set">Select Set / Difficulty:</label>
-                    <select id="test-set"></select>
+                    <select id="test-set">
+                        <option value="set1">Set 1 - Hardware & Fundamentals</option>
+                        <option value="set2">Set 2 - OS, UI & MS Office</option>
+                        <option value="set3">Set 3 - Internet & Networking</option>
+                        <option value="set4">Set 4 - Storage & Advanced Hardware</option>
+                        <option value="set5">Set 5 - Security & Generations</option>
+                    </select>
                 </div>
             </div>
             <div class="input-group">
@@ -274,7 +280,6 @@
 <script>
     // ==========================================
     // GOOGLE APP SCRIPT CONFIGURATION
-    // I have successfully embedded your exact URL here!
     // ==========================================
     const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzyEm9KQasVIaOXOeycxNPYnFa2yooCLJELLKI993nUPDr7DTg4etOx0x8CFMpWNs4/exec'; 
     const SYSTEM_PASSWORD = 'excellent@9658'; // The password from your Google Script
@@ -310,17 +315,15 @@
         }
     }
     
-    window.onload = () => {
-        // Run dropdown generation FIRST so it never freezes
-        updateSetDropdown();
-        
-        // Then start fetching database silently
+    // SAFE DOM INITIALIZATION
+    document.addEventListener("DOMContentLoaded", () => {
+        // Start fetching database silently
         preloadDatabase(); 
         
         makeDraggable(document.getElementById('drag-question-area'));
         makeDraggable(document.getElementById('drag-palette'));
         makeDraggable(document.getElementById('result-screen'));
-    };
+    });
 
     // --- BACKGROUND PRE-LOADER ---
     async function preloadDatabase() {
@@ -344,6 +347,7 @@
         }
     }
 
+    // Universal Google Drive Image Link Fixer
     function formatDriveLink(url) {
         if (!url) return 'https://via.placeholder.com/150?text=No+Photo';
         
@@ -378,13 +382,16 @@
             return;
         }
 
+        // Use cached data if we have it, otherwise fetch it now
         let studentsData = cachedDatabase;
 
         if (!studentsData) {
             try {
                 const response = await fetch(`${GAS_WEB_APP_URL}?pass=${encodeURIComponent(SYSTEM_PASSWORD)}`);
                 const data = await response.json();
-                if(data.error) throw new Error("Wrong Password in Script");
+                if(data.error) {
+                    throw new Error("Wrong Password in Script");
+                }
                 studentsData = data.students || [];
                 sessionStorage.setItem('excellent_db_cache', JSON.stringify(studentsData));
             } catch (error) {
@@ -396,17 +403,22 @@
         }
 
         const searchTerm = nameInput.toLowerCase();
+        
+        // FUZZY SEARCH: Finds anyone whose name contains what the user typed
         const matches = studentsData.filter(s => s.name && s.name.toLowerCase().includes(searchTerm));
 
         if (matches.length === 0) {
             studentName = nameInput;
             showGuestScreen(`No registry found for "${nameInput}". Proceeding as Guest.`);
         } else if (matches.length === 1) {
+            // Exactly 1 match found
             const s = matches[0];
             studentName = s.name;
+            // Check for common image variable names your ERP might use
             studentPhotoUrl = formatDriveLink(s.image || s.photo || s.profilePic || s.picture || s.url || s.img || null);
             showSingleMatchScreen();
         } else {
+            // Multiple matches found (e.g. they typed "Anil" and there are 3 Anils)
             showMultiMatchScreen(matches);
         }
     }
@@ -451,11 +463,14 @@
             
             const card = document.createElement('div');
             card.className = 'match-card';
+            
+            // Render a card for each matching student
             card.innerHTML = `
                 <img src="${picUrl}" alt="${s.name}" onerror="this.src='https://via.placeholder.com/150?text=No+Photo'">
                 <p>${s.name}</p>
             `;
             
+            // If they click this card, they claim this identity and start the exam
             card.onclick = () => {
                 studentName = s.name;
                 studentPhotoUrl = picUrl;
@@ -475,12 +490,17 @@
     }
 
     function finalizeStart() {
+        // Apply the verified identity to the sidebar
         document.getElementById('display-name').innerText = studentName;
+        
         const sidebarImg = document.getElementById('sidebar-photo');
         sidebarImg.src = studentPhotoUrl || 'https://via.placeholder.com/90?text=Guest';
+        
+        // Safety fallback if the Google Drive image gets blocked by the browser
         sidebarImg.onerror = function() {
             this.src = 'https://via.placeholder.com/90?text=Guest';
         };
+
         generateExamData();
     }
 
