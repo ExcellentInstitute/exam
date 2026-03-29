@@ -39,6 +39,13 @@
         .btn-confirm { background-color: #2c6eb5; color: white; padding: 10px 20px; border: none; border-radius: 3px; cursor: pointer; font-weight: bold;}
         .btn-reject { background-color: #d32f2f; color: white; padding: 10px 20px; border: none; border-radius: 3px; cursor: pointer; font-weight: bold;}
         
+        /* Multiple Matches Grid */
+        .match-grid { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 20px; }
+        .match-card { border: 2px solid #ccc; border-radius: 8px; padding: 15px; cursor: pointer; width: 140px; transition: 0.3s; background: white;}
+        .match-card:hover { border-color: #2c6eb5; background: #e6f0fa; transform: translateY(-3px); box-shadow: 0 4px 8px rgba(0,0,0,0.1);}
+        .match-card img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 2px solid #eee;}
+        .match-card p { margin: 0; font-size: 14px; font-weight: bold; color: #333; word-wrap: break-word;}
+
         #exam-interface { display: none; height: calc(100vh - 54px); flex-direction: row; }
         .left-panel { flex: 1; display: flex; flex-direction: column; background: white; border-right: 2px solid #ccc; }
         .exam-info-bar { background: #e6f0fa; padding: 10px 20px; font-weight: bold; display: flex; justify-content: space-between; border-bottom: 1px solid #ccc; }
@@ -129,8 +136,8 @@
         
         <div id="setup-inputs">
             <div class="input-group">
-                <label for="student-name">Candidate Name:</label>
-                <input type="text" id="student-name" placeholder="Enter full name to check database" required>
+                <label for="student-name">Candidate Name (Type partial name to search):</label>
+                <input type="text" id="student-name" placeholder="e.g. Rahul, Priya, etc." required>
             </div>
             <div class="config-grid">
                 <div class="input-group">
@@ -160,12 +167,21 @@
         </div>
 
         <div id="verify-section">
-            <img id="verify-img" src="https://via.placeholder.com/150?text=No+Photo" alt="Profile Photo">
-            <h3 id="verify-text">Fetching data...</h3>
+            <div id="single-match-view" style="display: none;">
+                <img id="verify-img" src="https://via.placeholder.com/150?text=No+Photo" alt="Profile Photo">
+                <h3 id="verify-text">Fetching data...</h3>
+            </div>
+            
+            <div id="multi-match-view" style="display: none;">
+                <h3 style="color: #2c6eb5;">We found multiple students. Please click your profile:</h3>
+                <div id="match-grid-container" class="match-grid">
+                    </div>
+            </div>
+
             <p id="verify-subtext"></p>
             <div class="verify-btns">
                 <button class="btn-reject" onclick="cancelVerification()">No, Go Back</button>
-                <button class="btn-confirm" onclick="finalizeStart()">Yes, Start Exam Now</button>
+                <button class="btn-confirm" id="btn-confirm-single" onclick="finalizeStart()">Yes, Start Exam Now</button>
             </div>
         </div>
 
@@ -248,8 +264,7 @@
             </div>
             
             <h3 style="color: #2c6eb5; border-bottom: 2px solid #ccc; padding-bottom: 5px;">Detailed Review</h3>
-            <div id="review-container">
-                </div>
+            <div id="review-container"></div>
 
             <br>
             <button class="start-btn" onclick="location.reload()">Return to Setup Screen</button>
@@ -261,7 +276,7 @@
     // GOOGLE SHEET CONFIGURATION
     // ==========================================
     const GAS_WEB_APP_URL = 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL'; 
-    const SYSTEM_PASSWORD = 'excellent@9658'; // Pulled directly from your script
+    const SYSTEM_PASSWORD = 'excellent@9658'; 
 
     let studentName = "";
     let studentPhotoUrl = null;
@@ -274,9 +289,9 @@
     let isTimed = true;
     let examActive = false;
 
-    // --- GOOGLE SHEET FETCH & VERIFICATION LOGIC ---
+    // --- GOOGLE SHEET FETCH & FUZZY VERIFICATION LOGIC ---
     function formatDriveLink(url) {
-        if (!url) return null;
+        if (!url) return 'https://via.placeholder.com/150?text=No+Photo';
         const driveRegex = /drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/;
         const match = url.match(driveRegex);
         if (match && match[1]) {
@@ -289,15 +304,14 @@
         const nameInput = document.getElementById('student-name').value.trim();
         if (nameInput === "") { alert("Please enter Candidate Name."); return; }
         
-        studentName = nameInput;
-
         const btn = document.getElementById('btn-verify-start');
         btn.innerText = "Checking Database...";
         btn.classList.add('btn-disabled');
         btn.disabled = true;
 
         if (GAS_WEB_APP_URL === 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL' || GAS_WEB_APP_URL === '') {
-            showVerifyScreen(null, "Database Link not configured. Proceeding as Unregistered Guest.");
+            studentName = nameInput;
+            showGuestScreen(`Database Link not configured. Proceeding as Guest: ${studentName}`);
             return;
         }
 
@@ -306,56 +320,87 @@
             const data = await response.json();
             
             if(data.error) {
-                showVerifyScreen(null, "Database access denied. Proceeding as Guest.");
+                studentName = nameInput;
+                showGuestScreen(`Database access denied. Proceeding as Guest: ${studentName}`);
                 return;
             }
 
-            let foundImg = null;
-            let matchedName = studentName;
+            const students = data.students || [];
+            const searchTerm = nameInput.toLowerCase();
+            
+            // Fuzzy Match: Find anyone whose name includes the typed text
+            const matches = students.filter(s => s.name.toLowerCase().includes(searchTerm));
 
-            if (data.students && data.students.length > 0) {
-                // Search ERP JSON for matching student name
-                const student = data.students.find(s => s.name.trim().toLowerCase() === studentName.toLowerCase());
-                if (student) {
-                    matchedName = student.name; 
-                    // ERP system might save images under 'image', 'photo', 'url' etc.
-                    foundImg = student.image || student.photo || student.profilePic || student.avatar || null;
-                } else {
-                    matchedName = null;
-                }
+            if (matches.length === 0) {
+                studentName = nameInput;
+                showGuestScreen(`No registry found for "${nameInput}". Proceeding as Guest.`);
+            } else if (matches.length === 1) {
+                // Exactly 1 match
+                const s = matches[0];
+                studentName = s.name;
+                studentPhotoUrl = formatDriveLink(s.image || s.photo || s.profilePic || null);
+                showSingleMatchScreen();
             } else {
-                matchedName = null;
-            }
-
-            if(matchedName) {
-                foundImg = formatDriveLink(foundImg); 
-                studentName = matchedName; // Update to exactly match DB casing
-                showVerifyScreen(foundImg, `Hello, ${matchedName}. Please confirm your profile.`);
-            } else {
-                showVerifyScreen(null, `No registry found for "${studentName}". Proceeding as Guest.`);
+                // Multiple matches
+                showMultiMatchScreen(matches);
             }
 
         } catch (error) {
             console.error("Database fetch error:", error);
-            showVerifyScreen(null, "Could not connect to database. Proceeding offline as Guest.");
+            studentName = nameInput;
+            showGuestScreen(`Could not connect to database. Proceeding offline as Guest: ${studentName}`);
         }
     }
 
-    function showVerifyScreen(imgUrl, msg) {
+    function showGuestScreen(msg) {
         document.getElementById('setup-inputs').style.display = 'none';
         document.getElementById('verify-section').style.display = 'block';
+        document.getElementById('single-match-view').style.display = 'block';
+        document.getElementById('multi-match-view').style.display = 'none';
+        document.getElementById('btn-confirm-single').style.display = 'inline-block';
         
-        const imgEl = document.getElementById('verify-img');
-        const textEl = document.getElementById('verify-text');
-        
-        if (imgUrl) {
-            imgEl.src = imgUrl;
-            studentPhotoUrl = imgUrl; 
-        } else {
-            imgEl.src = 'https://via.placeholder.com/150?text=No+Photo';
-            studentPhotoUrl = 'https://via.placeholder.com/90?text=Guest';
-        }
-        textEl.innerText = msg;
+        document.getElementById('verify-img').src = 'https://via.placeholder.com/150?text=No+Photo';
+        studentPhotoUrl = 'https://via.placeholder.com/90?text=Guest';
+        document.getElementById('verify-text').innerText = msg;
+    }
+
+    function showSingleMatchScreen() {
+        document.getElementById('setup-inputs').style.display = 'none';
+        document.getElementById('verify-section').style.display = 'block';
+        document.getElementById('single-match-view').style.display = 'block';
+        document.getElementById('multi-match-view').style.display = 'none';
+        document.getElementById('btn-confirm-single').style.display = 'inline-block';
+
+        document.getElementById('verify-img').src = studentPhotoUrl;
+        document.getElementById('verify-text').innerText = `Hello, ${studentName}. Is this you?`;
+    }
+
+    function showMultiMatchScreen(matches) {
+        document.getElementById('setup-inputs').style.display = 'none';
+        document.getElementById('verify-section').style.display = 'block';
+        document.getElementById('single-match-view').style.display = 'none';
+        document.getElementById('multi-match-view').style.display = 'block';
+        document.getElementById('btn-confirm-single').style.display = 'none'; // Hide generic 'Yes' button
+
+        const grid = document.getElementById('match-grid-container');
+        grid.innerHTML = '';
+
+        matches.forEach(s => {
+            const picUrl = formatDriveLink(s.image || s.photo || s.profilePic || null);
+            const card = document.createElement('div');
+            card.className = 'match-card';
+            card.innerHTML = `
+                <img src="${picUrl}" alt="${s.name}">
+                <p>${s.name}</p>
+            `;
+            // If they click a specific card, set their identity and start
+            card.onclick = () => {
+                studentName = s.name;
+                studentPhotoUrl = picUrl;
+                finalizeStart();
+            };
+            grid.appendChild(card);
+        });
     }
 
     function cancelVerification() {
@@ -369,7 +414,7 @@
 
     function finalizeStart() {
         document.getElementById('display-name').innerText = studentName;
-        document.getElementById('sidebar-photo').src = studentPhotoUrl;
+        document.getElementById('sidebar-photo').src = studentPhotoUrl || 'https://via.placeholder.com/90?text=Guest';
         generateExamData();
     }
 
@@ -412,7 +457,7 @@
     document.addEventListener("visibilitychange", () => {
         if (document.hidden && examActive && isTimed) {
             warningCount++;
-            alert("WARNING: You navigated away from the exam window! This action is strictly prohibited. (Warning " + warningCount + ")\n\nANTI-CHEAT PENALTY: Your questions have been changed and your previous answers are cleared!");
+            alert("WARNING: You navigated away from the exam window! This action is strictly prohibited.\n\nANTI-CHEAT PENALTY: Your questions have been changed and previous answers wiped!");
             penalizeAndReroll();
         }
     });
