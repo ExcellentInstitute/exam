@@ -275,7 +275,7 @@
     // ==========================================
     // GOOGLE APP SCRIPT CONFIGURATION
     // ==========================================
-    const GAS_WEB_APP_URL = 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL_HERE'; 
+    const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzyEm9KQasVIaOXOeycxNPYnFa2yooCLJELLKI993nUPDr7DTg4etOx0x8CFMpWNs4/exec'; 
     const SYSTEM_PASSWORD = 'excellent@9658'; // The password from your Google Script
 
     let studentName = "";
@@ -293,7 +293,7 @@
     // --- BACKGROUND PRE-LOADER ---
     // This fetches the database silently while the student is typing their name
     async function preloadDatabase() {
-        if (GAS_WEB_APP_URL === 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL_HERE' || GAS_WEB_APP_URL === '') return;
+        if (GAS_WEB_APP_URL === 'https://script.google.com/macros/s/AKfycbzyEm9KQasVIaOXOeycxNPYnFa2yooCLJELLKI993nUPDr7DTg4etOx0x8CFMpWNs4/exec' || GAS_WEB_APP_URL === '') return;
 
         // Check if we already downloaded it recently
         const stored = sessionStorage.getItem('excellent_db_cache');
@@ -343,7 +343,7 @@
         btn.classList.add('btn-disabled');
         btn.disabled = true;
 
-        if (GAS_WEB_APP_URL === 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL_HERE' || GAS_WEB_APP_URL === '') {
+        if (GAS_WEB_APP_URL === 'https://script.google.com/macros/s/AKfycbzyEm9KQasVIaOXOeycxNPYnFa2yooCLJELLKI993nUPDr7DTg4etOx0x8CFMpWNs4/exec' || GAS_WEB_APP_URL === '') {
             studentName = nameInput;
             showGuestScreen(`Database link not added to code yet. Proceeding as Guest: ${studentName}`);
             return;
