@@ -99,6 +99,7 @@
         .review-wrong { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; text-decoration: line-through; }
         .review-exp { margin-top: 15px; padding-top: 10px; border-top: 1px dashed #ccc; font-size: 15px; color: #444; }
 
+        /* ANTI-CHEAT FULLSCREEN BLOCKER */
         #fullscreen-blocker {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background-color: #d32f2f; z-index: 99999; flex-direction: column;
@@ -247,7 +248,8 @@
             </div>
             
             <h3 style="color: #2c6eb5; border-bottom: 2px solid #ccc; padding-bottom: 5px;">Detailed Review</h3>
-            <div id="review-container"></div>
+            <div id="review-container">
+                </div>
 
             <br>
             <button class="start-btn" onclick="location.reload()">Return to Setup Screen</button>
@@ -257,9 +259,9 @@
 <script>
     // ==========================================
     // GOOGLE SHEET CONFIGURATION
-    // PASTE YOUR SPREADSHEET ID HERE!
     // ==========================================
-    const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID_HERE'; 
+    const GAS_WEB_APP_URL = 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL'; 
+    const SYSTEM_PASSWORD = 'excellent@9658'; // Pulled directly from your script
 
     let studentName = "";
     let studentPhotoUrl = null;
@@ -273,8 +275,6 @@
     let examActive = false;
 
     // --- GOOGLE SHEET FETCH & VERIFICATION LOGIC ---
-    
-    // Helper to fix Google Drive image links so they display in HTML
     function formatDriveLink(url) {
         if (!url) return null;
         const driveRegex = /drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/;
@@ -296,44 +296,48 @@
         btn.classList.add('btn-disabled');
         btn.disabled = true;
 
-        // If ID isn't set, skip database check
-        if (SPREADSHEET_ID === 'YOUR_SPREADSHEET_ID_HERE' || SPREADSHEET_ID === '') {
-            showVerifyScreen(null, "Database ID not configured. Proceeding as Unregistered Guest.");
+        if (GAS_WEB_APP_URL === 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL' || GAS_WEB_APP_URL === '') {
+            showVerifyScreen(null, "Database Link not configured. Proceeding as Unregistered Guest.");
             return;
         }
 
-        const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv`;
-
         try {
-            const response = await fetch(url);
-            const csvText = await response.text();
-            const rows = csvText.split('\n');
-
-            let foundImg = null;
-
-            // Simple CSV Parse (Assumes Col A is Name, Col B is URL)
-            for(let i = 1; i < rows.length; i++) { 
-                const cols = rows[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
-                if(cols && cols.length >= 2) {
-                    const sheetName = cols[0].replace(/^"|"$/g, '').trim();
-                    const sheetUrl = cols[1].replace(/^"|"$/g, '').trim();
-
-                    if(sheetName.toLowerCase() === studentName.toLowerCase()) {
-                        foundImg = formatDriveLink(sheetUrl);
-                        break;
-                    }
-                }
+            const response = await fetch(`${GAS_WEB_APP_URL}?pass=${encodeURIComponent(SYSTEM_PASSWORD)}`);
+            const data = await response.json();
+            
+            if(data.error) {
+                showVerifyScreen(null, "Database access denied. Proceeding as Guest.");
+                return;
             }
 
-            if(foundImg) {
-                showVerifyScreen(foundImg, `Hello, ${studentName}. Please confirm your photo.`);
+            let foundImg = null;
+            let matchedName = studentName;
+
+            if (data.students && data.students.length > 0) {
+                // Search ERP JSON for matching student name
+                const student = data.students.find(s => s.name.trim().toLowerCase() === studentName.toLowerCase());
+                if (student) {
+                    matchedName = student.name; 
+                    // ERP system might save images under 'image', 'photo', 'url' etc.
+                    foundImg = student.image || student.photo || student.profilePic || student.avatar || null;
+                } else {
+                    matchedName = null;
+                }
+            } else {
+                matchedName = null;
+            }
+
+            if(matchedName) {
+                foundImg = formatDriveLink(foundImg); 
+                studentName = matchedName; // Update to exactly match DB casing
+                showVerifyScreen(foundImg, `Hello, ${matchedName}. Please confirm your profile.`);
             } else {
                 showVerifyScreen(null, `No registry found for "${studentName}". Proceeding as Guest.`);
             }
 
         } catch (error) {
             console.error("Database fetch error:", error);
-            showVerifyScreen(null, "Could not connect to database. Proceeding offline.");
+            showVerifyScreen(null, "Could not connect to database. Proceeding offline as Guest.");
         }
     }
 
@@ -346,7 +350,7 @@
         
         if (imgUrl) {
             imgEl.src = imgUrl;
-            studentPhotoUrl = imgUrl; // Save for sidebar
+            studentPhotoUrl = imgUrl; 
         } else {
             imgEl.src = 'https://via.placeholder.com/150?text=No+Photo';
             studentPhotoUrl = 'https://via.placeholder.com/90?text=Guest';
@@ -364,11 +368,8 @@
     }
 
     function finalizeStart() {
-        // Apply data to Sidebar
         document.getElementById('display-name').innerText = studentName;
         document.getElementById('sidebar-photo').src = studentPhotoUrl;
-
-        // Proceed to generate exam
         generateExamData();
     }
 
@@ -411,7 +412,7 @@
     document.addEventListener("visibilitychange", () => {
         if (document.hidden && examActive && isTimed) {
             warningCount++;
-            alert("WARNING: You navigated away from the exam window! This action is strictly prohibited.\n\nANTI-CHEAT PENALTY: Your questions have been changed and previous answers wiped!");
+            alert("WARNING: You navigated away from the exam window! This action is strictly prohibited. (Warning " + warningCount + ")\n\nANTI-CHEAT PENALTY: Your questions have been changed and your previous answers are cleared!");
             penalizeAndReroll();
         }
     });
@@ -498,6 +499,7 @@
         }
 
         document.getElementById('pre-exam').style.display = 'none';
+        document.getElementById('verify-section').style.display = 'none';
         document.getElementById('exam-interface').style.display = 'flex';
         
         buildPalette();
