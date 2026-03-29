@@ -1,4 +1,4 @@
-    // question_library.js
+// question_library.js
 // EXCELLENT INSTITUTE - ULTIMATE MASTER QUESTION BANK (BATCH 1 & 2 COMBINED)
 
 const questionBank = {
@@ -45,17 +45,6 @@ const questionBank = {
             { q: "What is the speed of a modern CPU measured in?", options: ["Megabytes (MB)", "Gigahertz (GHz)", "Megabits (Mbps)", "Kilobytes (KB)"], ans: 1, exp: "CPU clock speed is measured in Gigahertz." },
             { q: "Which of the following components generates the most heat in a computer?", options: ["RAM", "Hard Drive", "CPU", "Motherboard"], ans: 2, exp: "The CPU handles millions of calculations per second, generating extreme heat." },
             { q: "What is the purpose of the 'Esc' key?", options: ["To execute a command", "To save a file", "To cancel or abort the current operation", "To delete text"], ans: 2, exp: "Escape (Esc) cancels the active dialog or process." }
-            { q: "Which of the following is the fastest type of computer memory?", options: ["RAM", "Hard Drive", "CPU Registers", "Cache Memory"], ans: 2, exp: "Registers are located directly inside the CPU and are the fastest accessible memory." },
-            { q: "What is the full form of VDU?", options: ["Visual Display Unit", "Virtual Display Unit", "Video Display Unit", "Visual Desktop Unit"], ans: 0, exp: "VDU is an alternative, technical term for a computer monitor." },
-            { q: "Which of the following is a non-impact printer?", options: ["Dot Matrix", "Daisy Wheel", "Line Printer", "Laser Printer"], ans: 3, exp: "Laser printers use a laser beam and toner, so no physical hammer impacts the paper." },
-            { q: "What does the 'ALU' do in a computer?", options: ["Stores memory", "Performs mathematical calculations", "Connects to the internet", "Cools the processor"], ans: 1, exp: "The Arithmetic Logic Unit handles all mathematical and logical operations." },
-            { q: "Which type of device is a 'Plotter'?", options: ["Input", "Output", "Storage", "Network"], ans: 1, exp: "A plotter is an output device used to print high-quality vector graphics, often for architectural blueprints." },
-            { q: "What is the physical layout of the keys on a standard keyboard called?", options: ["Formatting", "Topology", "QWERTY", "Architecture"], ans: 2, exp: "QWERTY refers to the first six letters on the top left row of alphabetic keys." },
-            { q: "Which port is most commonly used to connect a wired microphone to a PC?", options: ["USB", "HDMI", "3.5mm Audio Jack", "VGA"], ans: 2, exp: "While USB is common now, the traditional and most universal audio input is the 3.5mm pink/red jack." },
-            { q: "What is the primary purpose of a computer's power supply (PSU)?", options: ["To store data", "To convert AC power from the wall to DC power", "To cool the system", "To calculate graphics"], ans: 1, exp: "Computer components require direct current (DC), but wall outlets provide alternating current (AC)." },
-            { q: "Which of the following is an example of an optical storage device?", options: ["Hard Disk", "Flash Drive", "Blu-ray Disc", "Floppy Disk"], ans: 2, exp: "Blu-ray discs are read using a blue-violet laser, making them optical storage." },
-            { q: "The number of pixels displayed on a screen is known as the screen's:", options: ["Refresh Rate", "Aspect Ratio", "Resolution", "Color Depth"], ans: 2, exp: "Resolution (e.g., 1920x1080) defines how many pixels make up the display." }
-            
         ],
         set2: [
             // OS, UI, MS OFFICE
@@ -99,16 +88,6 @@ const questionBank = {
             { q: "Which menu tab in MS Word contains the 'Watermark' option?", options: ["Home", "Insert", "Design", "View"], ans: 2, exp: "Watermarks, Page Color, and Page Borders are in the Design tab." },
             { q: "In Excel, what function is used to add all values in a range?", options: ["ADD", "TOTAL", "SUM", "PLUS"], ans: 2, exp: "The SUM() function adds all numbers in a selected range." },
             { q: "What does pressing F5 do in Microsoft Windows desktop?", options: ["Opens Search", "Refreshes the screen", "Opens Settings", "Shuts down the PC"], ans: 1, exp: "F5 refreshes the desktop or active folder." }
-            { q: "In Microsoft Excel, what does the VLOOKUP function do?", options: ["Adds numbers vertically", "Searches for a value in the first column of a table range", "Creates a vertical chart", "Validates data entries"], ans: 1, exp: "VLOOKUP (Vertical Lookup) searches down the first column of a range and returns a value in the same row." },
-            { q: "What is the shortcut to open a new, blank workbook in MS Excel?", options: ["Ctrl + N", "Ctrl + B", "Ctrl + W", "Alt + N"], ans: 0, exp: "Ctrl + N creates a New file in almost all Microsoft Office applications." },
-            { q: "Which of the following is an example of a presentation graphics software?", options: ["MS Word", "MS Excel", "MS Access", "MS PowerPoint"], ans: 3, exp: "PowerPoint is designed specifically for creating visual presentations." },
-            { q: "In MS Word, what is the default alignment for a newly typed paragraph?", options: ["Center", "Right", "Justify", "Left"], ans: 3, exp: "English is read left-to-right, so the default alignment in Word is Left." },
-            { q: "What is the function of 'Ctrl + Z' in Windows?", options: ["Redo", "Undo", "Cut", "Select All"], ans: 1, exp: "Ctrl + Z reverses (undoes) the last action you performed." },
-            { q: "In MS Excel, how is a cell referenced?", options: ["By its row number followed by column letter", "By its column letter followed by row number", "By its sheet name", "By its value"], ans: 1, exp: "Cells are referenced by Column then Row (e.g., A1, B4, C12)." },
-            { q: "Which feature in MS Word allows you to type over existing text, replacing it?", options: ["Insert Mode", "Overtype Mode", "Edit Mode", "Replace Mode"], ans: 1, exp: "Overtype mode (toggled via the Insert key) replaces characters to the right of the cursor as you type." },
-            { q: "What does the 'IF' function do in Excel?", options: ["Averages numbers", "Checks whether a condition is met and returns one value if True, another if False", "Counts empty cells", "Finds the maximum value"], ans: 1, exp: "The IF function is a logical test: =IF(condition, value_if_true, value_if_false)." },
-            {q: "Which shortcut key is used to refresh the active window in Windows?", options: ["F2", "F3", "F4", "F5"], ans: 3, exp: "F5 reloads/refreshes the current desktop or browser window." },
-            {q: "In PowerPoint, what view displays all slides as thumbnails for easy rearranging?", options: ["Slide Show", "Normal View", "Slide Sorter", "Notes Page"], ans: 2, exp: "Slide Sorter view gives you a bird's-eye view of the entire presentation." }
         ],
         set3: [
             // INTERNET, NETWORKING & PROTOCOLS
