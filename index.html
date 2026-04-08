@@ -191,8 +191,7 @@
             
             <div id="multi-match-view" style="display: none;">
                 <h3 style="color: #2c6eb5;">We found multiple students. Please click your profile:</h3>
-                <div id="match-grid-container" class="match-grid">
-                    </div>
+                <div id="match-grid-container" class="match-grid"></div>
             </div>
 
             <p id="verify-subtext"></p>
@@ -291,7 +290,6 @@
 <script>
     // ==========================================
     // GOOGLE APP SCRIPT CONFIGURATION
-    // YOUR ACTUAL URL IS NOW CONFIGURED BELOW
     // ==========================================
     const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzyEm9KQasVIaOXOeycxNPYnFa2yooCLJELLKI993nUPDr7DTg4etOx0x8CFMpWNs4/exec'; 
     const SYSTEM_PASSWORD = 'excellent@9658'; 
@@ -329,7 +327,7 @@
     
     // --- ON LOAD INITIALIZATION ---
     window.onload = () => {
-        // --- ACCESS CONTROL CHECK (SUNDAY OR HOST OVERRIDE) ---
+        // --- ACCESS CONTROL CHECK ---
         const urlParams = new URLSearchParams(window.location.search);
         const isHost = urlParams.get('host') === 'admin';
         const isSunday = new Date().getDay() === 0; // 0 = Sunday
@@ -338,10 +336,9 @@
             // Lock the portal
             document.getElementById('pre-exam').style.display = 'none';
             document.getElementById('access-denied-screen').style.display = 'block';
-            return; // Stop loading the rest of the setup
+            return; 
         }
 
-        // If access is granted, load normally
         updateSetDropdown();
         preloadDatabase(); 
         
@@ -366,7 +363,7 @@
                 sessionStorage.setItem('excellent_db_cache', JSON.stringify(cachedDatabase));
             }
         } catch (e) {
-            console.log("Silent preload failed. Will fetch when user clicks Verify.");
+            console.log("Silent preload failed.");
         }
     }
 
@@ -382,9 +379,7 @@
         else if (url.match(driveRegex2)) id = url.match(driveRegex2)[1];
         else if (url.match(driveRegex3)) id = url.match(driveRegex3)[1];
 
-        if (id) {
-            return `https://drive.google.com/uc?export=view&id=${id}`;
-        }
+        if (id) return `https://drive.google.com/uc?export=view&id=${id}`;
         return url; 
     }
 
