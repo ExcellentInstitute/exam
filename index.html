@@ -131,13 +131,13 @@
         <h1>Excellent Institute - CBT Portal</h1>
     </div>
 
-    <div id="access-denied-screen" style="display: none; text-align: center; margin-top: 60px; padding: 40px; background: white; max-width: 600px; margin-left: auto; margin-right: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 5px solid #d32f2f;">
+    <div id="access-denied-screen" style="display: block; text-align: center; margin-top: 60px; padding: 40px; background: white; max-width: 600px; margin-left: auto; margin-right: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 5px solid #d32f2f;">
         <h2 style="color: #d32f2f; font-size: 28px; margin-top: 0;">🔒 Exam Portal Locked</h2>
         <p style="font-size: 18px; color: #555; line-height: 1.6;">The CBT Examination Portal is currently closed.</p>
         <p style="font-size: 18px; color: #555; line-height: 1.6;"><strong>Exams are only scheduled for Sundays.</strong><br>Please return on the next scheduled exam day.</p>
     </div>
 
-    <div id="pre-exam">
+    <div id="pre-exam" style="display: none;">
         <h2>Exam Setup</h2>
         
         <div id="setup-inputs">
@@ -319,28 +319,28 @@
         }
     }
     
-    // --- ON LOAD INITIALIZATION & ROCK-SOLID ACCESS CONTROL ---
-    window.onload = () => {
-        // We use .hash instead of .search so GitHub routing cannot strip it
+    // --- ON LOAD INITIALIZATION (REVISED) ---
+    document.addEventListener("DOMContentLoaded", () => {
+        // Check hash and day
         const hash = window.location.hash.toLowerCase();
         const isHost = (hash === '#admin');
         const isSunday = (new Date().getDay() === 0); // 0 = Sunday
 
-        if (!isSunday && !isHost) {
-            // Lock the portal: Hide everything and display the lock screen
-            document.getElementById('pre-exam').style.display = 'none';
-            document.getElementById('access-denied-screen').style.display = 'block';
-            return; // Stops the rest of the file from loading
+        // If it IS Sunday OR the user typed #admin, we unlock the portal.
+        if (isSunday || isHost) {
+            document.getElementById('access-denied-screen').style.display = 'none';
+            document.getElementById('pre-exam').style.display = 'block';
+            
+            updateSetDropdown();
+            preloadDatabase(); 
+            
+            makeDraggable(document.getElementById('drag-question-area'));
+            makeDraggable(document.getElementById('drag-palette'));
+            makeDraggable(document.getElementById('result-screen'));
         }
-
-        // If unlocked (Sunday or #admin tag is present), proceed normally:
-        updateSetDropdown();
-        preloadDatabase(); 
-        
-        makeDraggable(document.getElementById('drag-question-area'));
-        makeDraggable(document.getElementById('drag-palette'));
-        makeDraggable(document.getElementById('result-screen'));
-    };
+        // If neither is true, the script does nothing. 
+        // The HTML defaults to the lock screen, so they are kept out automatically.
+    });
 
     // --- BACKGROUND PRE-LOADER ---
     async function preloadDatabase() {
