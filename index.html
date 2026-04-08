@@ -293,7 +293,7 @@
     // GOOGLE APP SCRIPT CONFIGURATION
     // PUT YOUR URL HERE:
     // ==========================================
-    const GAS_WEB_APP_URL = 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL_HERE'; 
+    const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzyEm9KQasVIaOXOeycxNPYnFa2yooCLJELLKI993nUPDr7DTg4etOx0x8CFMpWNs4/exec'; 
     const SYSTEM_PASSWORD = 'excellent@9658'; 
 
     let studentName = "";
@@ -352,7 +352,7 @@
 
     // --- BACKGROUND PRE-LOADER ---
     async function preloadDatabase() {
-        if (!GAS_WEB_APP_URL || GAS_WEB_APP_URL === 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL_HERE') return;
+        if (!GAS_WEB_APP_URL || GAS_WEB_APP_URL === 'https://script.google.com/macros/s/AKfycbzyEm9KQasVIaOXOeycxNPYnFa2yooCLJELLKI993nUPDr7DTg4etOx0x8CFMpWNs4/exec') return;
 
         const stored = sessionStorage.getItem('excellent_db_cache');
         if (stored) {
@@ -400,7 +400,7 @@
         btn.classList.add('btn-disabled');
         btn.disabled = true;
 
-        if (!GAS_WEB_APP_URL || GAS_WEB_APP_URL === 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL_HERE') {
+        if (!GAS_WEB_APP_URL || GAS_WEB_APP_URL === 'https://script.google.com/macros/s/AKfycbzyEm9KQasVIaOXOeycxNPYnFa2yooCLJELLKI993nUPDr7DTg4etOx0x8CFMpWNs4/exec') {
             studentName = nameInput;
             showGuestScreen(`Database link not added to code yet. Proceeding as Guest: ${studentName}`);
             return;
