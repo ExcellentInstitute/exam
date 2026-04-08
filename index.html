@@ -32,6 +32,11 @@
         .start-btn:hover { background-color: #45a049; }
         .btn-disabled { background-color: #9e9e9e !important; cursor: not-allowed; }
 
+        /* --- NEW: Access Denied Screen --- */
+        #access-denied-screen { display: none; text-align: center; margin-top: 60px; padding: 40px; background: white; max-width: 600px; margin-left: auto; margin-right: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-top: 5px solid #d32f2f; }
+        #access-denied-screen h2 { color: #d32f2f; font-size: 28px; margin-top: 0;}
+        #access-denied-screen p { font-size: 18px; color: #555; line-height: 1.6;}
+
         /* Identity Verification Section */
         #verify-section { display: none; text-align: center; padding: 20px; border: 2px dashed #2c6eb5; border-radius: 5px; margin-top: 20px; background-color: #f9fbfd;}
         #verify-img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #2c6eb5; margin-bottom: 15px; background-color: #fff;}
@@ -129,6 +134,12 @@
 
     <div class="header">
         <h1>Excellent Institute - CBT Portal</h1>
+    </div>
+
+    <div id="access-denied-screen">
+        <h2>🔒 Exam Portal Locked</h2>
+        <p>The CBT Examination Portal is currently closed.</p>
+        <p><strong>Exams are only scheduled for Sundays.</strong><br>Please return on the next scheduled exam day.</p>
     </div>
 
     <div id="pre-exam">
@@ -280,9 +291,10 @@
 <script>
     // ==========================================
     // GOOGLE APP SCRIPT CONFIGURATION
+    // PUT YOUR URL HERE:
     // ==========================================
-    const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzyEm9KQasVIaOXOeycxNPYnFa2yooCLJELLKI993nUPDr7DTg4etOx0x8CFMpWNs4/exec'; 
-    const SYSTEM_PASSWORD = 'excellent@9658'; // The password from your Google Script
+    const GAS_WEB_APP_URL = 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL_HERE'; 
+    const SYSTEM_PASSWORD = 'excellent@9658'; 
 
     let studentName = "";
     let studentPhotoUrl = null;
@@ -294,9 +306,9 @@
     let timeRemaining = 1200; 
     let isTimed = true;
     let examActive = false;
-    let cachedDatabase = null; // Stores data so we don't have to fetch it twice
+    let cachedDatabase = null;
 
-    // --- EXAM LOGIC FIRST: DROPDOWNS ---
+    // --- DROPDOWNS ---
     function updateSetDropdown() {
         const subject = document.getElementById('exam-subject').value;
         const setDropdown = document.getElementById('test-set');
@@ -315,19 +327,32 @@
         }
     }
     
-    // SAFE DOM INITIALIZATION
-    document.addEventListener("DOMContentLoaded", () => {
-        // Start fetching database silently
+    // --- ON LOAD INITIALIZATION ---
+    window.onload = () => {
+        // --- NEW: ACCESS CONTROL CHECK (SUNDAY OR HOST OVERRIDE) ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const isHost = urlParams.get('host') === 'admin';
+        const isSunday = new Date().getDay() === 0; // 0 = Sunday
+
+        if (!isSunday && !isHost) {
+            // Lock the portal
+            document.getElementById('pre-exam').style.display = 'none';
+            document.getElementById('access-denied-screen').style.display = 'block';
+            return; // Stop loading the rest of the setup
+        }
+
+        // If access is granted, load normally
+        updateSetDropdown();
         preloadDatabase(); 
         
         makeDraggable(document.getElementById('drag-question-area'));
         makeDraggable(document.getElementById('drag-palette'));
         makeDraggable(document.getElementById('result-screen'));
-    });
+    };
 
     // --- BACKGROUND PRE-LOADER ---
     async function preloadDatabase() {
-        if (!GAS_WEB_APP_URL) return;
+        if (!GAS_WEB_APP_URL || GAS_WEB_APP_URL === 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL_HERE') return;
 
         const stored = sessionStorage.getItem('excellent_db_cache');
         if (stored) {
@@ -343,11 +368,10 @@
                 sessionStorage.setItem('excellent_db_cache', JSON.stringify(cachedDatabase));
             }
         } catch (e) {
-            console.log("Silent preload failed. Will fetch when user clicks Verify.");
+            console.log("Silent preload failed.");
         }
     }
 
-    // Universal Google Drive Image Link Fixer
     function formatDriveLink(url) {
         if (!url) return 'https://via.placeholder.com/150?text=No+Photo';
         
@@ -366,7 +390,7 @@
         return url; 
     }
 
-    // --- VERIFICATION & FUZZY SEARCH LOGIC ---
+    // --- VERIFICATION LOGIC ---
     async function verifyStudent() {
         const nameInput = document.getElementById('student-name').value.trim();
         if (nameInput === "") { alert("Please enter Candidate Name."); return; }
@@ -376,26 +400,22 @@
         btn.classList.add('btn-disabled');
         btn.disabled = true;
 
-        if (!GAS_WEB_APP_URL) {
+        if (!GAS_WEB_APP_URL || GAS_WEB_APP_URL === 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL_HERE') {
             studentName = nameInput;
             showGuestScreen(`Database link not added to code yet. Proceeding as Guest: ${studentName}`);
             return;
         }
 
-        // Use cached data if we have it, otherwise fetch it now
         let studentsData = cachedDatabase;
 
         if (!studentsData) {
             try {
                 const response = await fetch(`${GAS_WEB_APP_URL}?pass=${encodeURIComponent(SYSTEM_PASSWORD)}`);
                 const data = await response.json();
-                if(data.error) {
-                    throw new Error("Wrong Password in Script");
-                }
+                if(data.error) throw new Error("Wrong Password");
                 studentsData = data.students || [];
                 sessionStorage.setItem('excellent_db_cache', JSON.stringify(studentsData));
             } catch (error) {
-                console.error("Database fetch error:", error);
                 studentName = nameInput;
                 showGuestScreen(`Could not connect to database. Proceeding offline as Guest: ${studentName}`);
                 return;
@@ -403,22 +423,17 @@
         }
 
         const searchTerm = nameInput.toLowerCase();
-        
-        // FUZZY SEARCH: Finds anyone whose name contains what the user typed
         const matches = studentsData.filter(s => s.name && s.name.toLowerCase().includes(searchTerm));
 
         if (matches.length === 0) {
             studentName = nameInput;
             showGuestScreen(`No registry found for "${nameInput}". Proceeding as Guest.`);
         } else if (matches.length === 1) {
-            // Exactly 1 match found
             const s = matches[0];
             studentName = s.name;
-            // Check for common image variable names your ERP might use
             studentPhotoUrl = formatDriveLink(s.image || s.photo || s.profilePic || s.picture || s.url || s.img || null);
             showSingleMatchScreen();
         } else {
-            // Multiple matches found (e.g. they typed "Anil" and there are 3 Anils)
             showMultiMatchScreen(matches);
         }
     }
@@ -464,13 +479,11 @@
             const card = document.createElement('div');
             card.className = 'match-card';
             
-            // Render a card for each matching student
             card.innerHTML = `
                 <img src="${picUrl}" alt="${s.name}" onerror="this.src='https://via.placeholder.com/150?text=No+Photo'">
                 <p>${s.name}</p>
             `;
             
-            // If they click this card, they claim this identity and start the exam
             card.onclick = () => {
                 studentName = s.name;
                 studentPhotoUrl = picUrl;
@@ -490,17 +503,12 @@
     }
 
     function finalizeStart() {
-        // Apply the verified identity to the sidebar
         document.getElementById('display-name').innerText = studentName;
-        
         const sidebarImg = document.getElementById('sidebar-photo');
         sidebarImg.src = studentPhotoUrl || 'https://via.placeholder.com/90?text=Guest';
-        
-        // Safety fallback if the Google Drive image gets blocked by the browser
         sidebarImg.onerror = function() {
             this.src = 'https://via.placeholder.com/90?text=Guest';
         };
-
         generateExamData();
     }
 
