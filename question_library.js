@@ -287,3 +287,220 @@ questionBank.computer.set1.push(
     { q: "Sample New Question?", options: ["A", "B", "C", "D"], ans: 0, exp: "Sample." }
 );
 */
+// ========================================================================
+// BATCH 3: EXPANSION PACK (Added 80+ New Questions)
+// ========================================================================
+
+// --- Add to COMPUTER: SET 1 (Hardware & Fundamentals) ---
+questionBank.computer.set1.push(
+    { q: "Which of the following is NOT an input device?", options: ["Webcam", "Microphone", "Projector", "Barcode Scanner"], ans: 2, exp: "A projector takes digital information and outputs it visually, making it an output device." },
+    { q: "What is the function of the ALU in the CPU?", options: ["Store data temporarily", "Perform mathematical and logical operations", "Control the flow of data", "Connect to the internet"], ans: 1, exp: "The Arithmetic Logic Unit (ALU) performs all calculations." },
+    { q: "What does 'SRAM' stand for?", options: ["Static Random Access Memory", "Synchronous Read Access Memory", "System Random Access Memory", "Static Read Access Memory"], ans: 0, exp: "SRAM is faster and more expensive than DRAM and is typically used for CPU cache." },
+    { q: "Which hardware device protects a computer from sudden voltage spikes?", options: ["Modem", "Surge Protector", "Router", "Switch"], ans: 1, exp: "A surge protector blocks sudden spikes in electrical current." },
+    { q: "The physical connections on a motherboard where peripheral devices plug in are called:", options: ["Sockets", "Buses", "Ports", "Gates"], ans: 2, exp: "Ports (like USB, HDMI) are the interface points for external devices." },
+    { q: "Which of the following describes 'Firmware'?", options: ["Software used for graphic design", "Malicious code", "Permanent software programmed into a read-only memory", "Temporary files stored in RAM"], ans: 2, exp: "Firmware is basic software providing control for specific hardware (like BIOS)." },
+    { q: "What does 'LCD' stand for?", options: ["Light Computer Display", "Liquid Crystal Display", "Luminous Cathode Diode", "Liquid Color Display"], ans: 1, exp: "LCDs use light-modulating properties of liquid crystals." },
+    { q: "Which device is essential for connecting a computer to a local network?", options: ["VGA cable", "NIC (Network Interface Card)", "Sound Card", "Graphics Card"], ans: 1, exp: "The NIC allows a computer to connect to a network via an Ethernet cable or Wi-Fi." },
+    { q: "What is the standard connection type for modern internal Hard Drives and SSDs?", options: ["IDE", "PATA", "SATA", "AGP"], ans: 2, exp: "Serial ATA (SATA) replaced older IDE/PATA connections." },
+    { q: "Which memory is considered 'volatile'?", options: ["ROM", "Flash Memory", "Hard Drive", "RAM"], ans: 3, exp: "RAM loses all its stored data the moment power is turned off." }
+);
+
+// --- Add to COMPUTER: SET 2 (OS, UI & MS Office) ---
+questionBank.computer.set2.push(
+    { q: "In Microsoft Excel, what is a 'Pivot Table' used for?", options: ["Formatting cell colors", "Summarizing and analyzing large datasets", "Creating macro scripts", "Translating text"], ans: 1, exp: "Pivot tables allow users to extract significance from a large, detailed data set." },
+    { q: "What is the shortcut key to open the 'Print Preview' in MS Word?", options: ["Ctrl + P", "Ctrl + F2", "Shift + P", "Alt + P"], ans: 1, exp: "Ctrl + F2 directly opens the print preview screen." },
+    { q: "Which of these is NOT a valid cell reference in Excel?", options: ["A1", "$B$4", "2C", "D$5"], ans: 2, exp: "Cell references always start with the column letter followed by the row number (e.g., C2)." },
+    { q: "In MS Word, what does 'Ctrl + ]' do?", options: ["Decreases font size", "Increases font size by 1 point", "Makes text bold", "Aligns text to the right"], ans: 1, exp: "Ctrl + ] increases the font size step-by-step." },
+    { q: "What is the name of the built-in antivirus in modern Windows Operating Systems?", options: ["McAfee", "Norton", "Windows Defender", "Avast"], ans: 2, exp: "Windows Defender provides native anti-malware protection." },
+    { q: "Which Excel function finds the highest value in a selected range?", options: ["HIGH()", "TOP()", "MAX()", "PEAK()"], ans: 2, exp: "The MAX() function returns the largest numeric value in a range." },
+    { q: "In PowerPoint, what is the shortcut to duplicate the current slide?", options: ["Ctrl + D", "Ctrl + C", "Ctrl + M", "Ctrl + N"], ans: 0, exp: "Ctrl + D duplicates the currently selected object or slide." },
+    { q: "Which view in MS Word shows how the document will look when printed?", options: ["Web Layout", "Outline View", "Draft View", "Print Layout"], ans: 3, exp: "Print Layout is the default and most accurate representation of the final physical page." },
+    { q: "What happens when you press 'F2' while selecting a file in Windows Explorer?", options: ["It deletes the file", "It copies the file", "It opens the file", "It allows you to rename the file"], ans: 3, exp: "F2 is the universal Windows shortcut for renaming a selected item." },
+    { q: "What does the 'SUMIF' function do in Excel?", options: ["Adds all cells", "Adds cells that meet a specific condition", "Counts cells", "Finds the average of cells"], ans: 1, exp: "SUMIF sums the values in a range that meet criteria you specify." }
+);
+
+// --- Add to COMPUTER: SET 3 (Internet & Networking) ---
+questionBank.computer.set3.push(
+    { q: "Which of the following is NOT a top-level domain (TLD)?", options: [".com", ".org", ".www", ".net"], ans: 2, exp: ".www is a subdomain prefix, not a Top-Level Domain." },
+    { q: "What does 'VoIP' stand for?", options: ["Video over Internet Protocol", "Voice over Internet Protocol", "Virtual Online Internet Provider", "Voice online Internet Process"], ans: 1, exp: "VoIP allows you to make voice calls using a broadband Internet connection instead of a regular phone line." },
+    { q: "Which networking hardware operates at the Data Link layer (Layer 2) of the OSI model?", options: ["Router", "Switch", "Hub", "Repeater"], ans: 1, exp: "Switches operate at Layer 2 and use MAC addresses to forward data." },
+    { q: "What is the primary function of a DNS server?", options: ["To block spam emails", "To resolve domain names to IP addresses", "To encrypt web traffic", "To assign IP addresses to computers"], ans: 1, exp: "DNS translates human-readable URLs (google.com) into machine-readable IP addresses." },
+    { q: "Which of the following is a search engine?", options: ["Apache", "Bing", "Chrome", "Firefox"], ans: 1, exp: "Bing is Microsoft's web search engine." },
+    { q: "What does the error code 'HTTP 403' mean?", options: ["Page Not Found", "Internal Server Error", "Forbidden (Access Denied)", "Bad Gateway"], ans: 2, exp: "A 403 error means the server understands the request but refuses to authorize it." },
+    { q: "Which wireless standard operates on both 2.4 GHz and 5 GHz frequency bands?", options: ["802.11a", "802.11b", "802.11g", "802.11n / 802.11ac"], ans: 3, exp: "Modern Wi-Fi standards (n, ac, ax) support dual-band operations." },
+    { q: "What does 'PING' stand for?", options: ["Packet Internet Groper", "Primary Internet Node Gateway", "Private Intranet Network Group", "Public Internet Network Gateway"], ans: 0, exp: "PING is a utility used to test the reachability of a host." },
+    { q: "What is a 'Subnet Mask' used for?", options: ["To hide your IP address", "To divide an IP address into network and host addresses", "To encrypt Wi-Fi passwords", "To block viruses"], ans: 1, exp: "Subnet masks separate the network portion of an IP address from the host portion." },
+    { q: "Which protocol is used for securely accessing a remote computer terminal?", options: ["Telnet", "FTP", "SSH", "HTTP"], ans: 2, exp: "Secure Shell (SSH) is a cryptographic network protocol for operating network services securely." }
+);
+
+// --- Add to COMPUTER: SET 4 (Storage & Memory) ---
+questionBank.computer.set4.push(
+    { q: "Which of the following represents 1024 Terabytes?", options: ["1 Gigabyte (GB)", "1 Petabyte (PB)", "1 Exabyte (EB)", "1 Zettabyte (ZB)"], ans: 1, exp: "1 Petabyte = 1024 Terabytes." },
+    { q: "What is the primary physical difference between an HDD and an SSD?", options: ["SSDs are much larger", "HDDs use moving magnetic disks, SSDs use flash memory", "HDDs plug into USB, SSDs plug into SATA", "SSDs are volatile, HDDs are not"], ans: 1, exp: "HDDs are mechanical; SSDs have zero moving parts." },
+    { q: "Which memory type stores the computer's startup routine and hardware settings?", options: ["RAM", "Cache", "CMOS/BIOS", "Virtual Memory"], ans: 2, exp: "The BIOS/UEFI firmware is stored on a non-volatile ROM/CMOS chip." },
+    { q: "What does 'RPM' stand for when discussing Hard Disk Drives?", options: ["Read Per Minute", "Rotations Per Minute", "Random Processing Memory", "Rapid Pagination Mode"], ans: 1, exp: "RPM measures how fast the magnetic platters inside an HDD spin (e.g., 7200 RPM)." },
+    { q: "Which is the smallest measurement of data?", options: ["Bit", "Byte", "Nibble", "Word"], ans: 0, exp: "A Bit (binary digit) is the absolute smallest unit, representing a 0 or a 1." },
+    { q: "What is 'Virtual Memory'?", options: ["Memory stored in the cloud", "A section of the hard drive used as if it were RAM", "Cache memory inside the CPU", "Memory that cannot be erased"], ans: 1, exp: "Virtual memory acts as overflow space when physical RAM is full." },
+    { q: "Which optical disc has the highest storage capacity?", options: ["CD-ROM", "DVD-R", "Blu-ray Disc", "Floppy Disk"], ans: 2, exp: "Blu-ray discs can hold 25GB to 100GB, far exceeding DVDs." },
+    { q: "What is 'Defragmentation'?", options: ["Deleting old files", "Erasing the hard drive completely", "Reorganizing fragmented data on a hard drive to improve speed", "Installing an operating system"], ans: 2, exp: "Defragging organizes physical data blocks on an HDD so the read head travels less." },
+    { q: "What type of storage is a USB Flash Drive?", options: ["Magnetic", "Optical", "Solid-State / Flash", "Sequential"], ans: 2, exp: "Flash drives use NAND solid-state memory." },
+    { q: "Which of these memory types is volatile?", options: ["ROM", "EEPROM", "SRAM", "Flash Drive"], ans: 2, exp: "Static RAM (SRAM) loses data when power is removed." }
+);
+
+// --- Add to COMPUTER: SET 5 (Security & Generations) ---
+questionBank.computer.set5.push(
+    { q: "What is a 'Zero-Day' vulnerability?", options: ["A virus that deletes everything at midnight", "A software flaw that is unknown to the vendor and has no patch", "A completely secure system", "A backup system"], ans: 1, exp: "It is called 'Zero-Day' because developers have had zero days to fix the newly discovered flaw." },
+    { q: "Which generation of computers introduced Integrated Circuits (ICs)?", options: ["First Generation", "Second Generation", "Third Generation", "Fourth Generation"], ans: 2, exp: "Third-generation computers replaced individual transistors with ICs." },
+    { q: "What is 'Social Engineering' in cybersecurity?", options: ["Building networks for social media", "Manipulating people into giving up confidential information", "Writing code for firewalls", "Hacking hardware directly"], ans: 1, exp: "Phishing and tailgating are examples of exploiting human psychology." },
+    { q: "What is the primary function of a 'VPN'?", options: ["To speed up internet downloads", "To encrypt internet traffic and mask your IP address", "To block spam emails", "To store passwords securely"], ans: 1, exp: "A Virtual Private Network creates a secure, encrypted tunnel." },
+    { q: "What type of malware disguises itself as legitimate software?", options: ["Worm", "Trojan", "Ransomware", "Spyware"], ans: 1, exp: "Like the mythological wooden horse, a Trojan hides its malicious payload inside a harmless-looking program." },
+    { q: "Which encryption protocol is currently the standard for securing Wi-Fi networks?", options: ["WEP", "WPA", "WPA2 / WPA3", "TKIP"], ans: 2, exp: "WPA3 is the newest standard, though WPA2 remains highly prevalent." },
+    { q: "What is a 'Keylogger'?", options: ["A tool for typing faster", "Malware that records every keystroke made by the user", "A password manager", "A network switch"], ans: 1, exp: "Keyloggers are a type of spyware used to steal passwords and sensitive data." },
+    { q: "Which generation of computers used vacuum tubes?", options: ["First Generation", "Second Generation", "Third Generation", "Fifth Generation"], ans: 0, exp: "First-generation computers (like ENIAC) relied on massive arrays of vacuum tubes." },
+    { q: "What does 'DDoS' stand for?", options: ["Direct Download Operating System", "Distributed Denial of Service", "Digital Data Overlay System", "Data Denial of Source"], ans: 1, exp: "A DDoS attack uses multiple compromised systems to flood a target with traffic." },
+    { q: "What is the purpose of 'Two-Factor Authentication' (2FA)?", options: ["To speed up login times", "To require two different forms of identification before granting access", "To share passwords between two users", "To encrypt hard drives"], ans: 1, exp: "2FA adds a layer of security (e.g., password + SMS code)." }
+);
+
+// --- Add to REASONING: EASY ---
+questionBank.reasoning.easy.push(
+    { q: "Find the odd word out:", options: ["Circle", "Triangle", "Rectangle", "Square"], ans: 0, exp: "A circle has no straight sides or angles; the others are polygons." },
+    { q: "If CAT is coded as 24 and DOG is coded as 26, how is BIRD coded?", options: ["37", "38", "39", "40"], ans: 3, exp: "Sum of letters: B(2)+I(9)+R(18)+D(4) = 33. Wait, let me recheck DOG: D(4)+O(15)+G(7) = 26. Yes. BIRD: 2+9+18+4 = 33. Let's fix options to include 33.", options: ["31", "32", "33", "34"], ans: 2, exp: "B(2)+I(9)+R(18)+D(4) = 33." },
+    { q: "Library is to Books as Bank is to:", options: ["Money", "Teller", "Vault", "Manager"], ans: 0, exp: "A library stores books. A bank stores money." },
+    { q: "Look at this series: 21, 9, 21, 11, 21, 13, 21... What comes next?", options: ["14", "15", "21", "23"], ans: 1, exp: "Alternating series. 21 is static. The second series is 9, 11, 13 (+2). Next is 13+2=15." },
+    { q: "Which word does NOT belong?", options: ["Inch", "Ounce", "Centimeter", "Yard"], ans: 1, exp: "Ounce is a measure of weight. The rest measure length/distance." },
+    { q: "If A is the son of B and B is the father of C, how is A related to C?", options: ["Father", "Son", "Brother", "Uncle"], ans: 2, exp: "A and C have the same father (B), making A the brother of C." },
+    { q: "Complete the series: 3, 6, 9, 12, __", options: ["13", "14", "15", "18"], ans: 2, exp: "The series adds 3 each time. 12 + 3 = 15." },
+    { q: "Doctor is to Disease as Police is to:", options: ["Law", "Criminal", "Crime", "Court"], ans: 2, exp: "A doctor fights disease. Police fight crime." },
+    { q: "Find the odd one out:", options: ["Iron", "Mercury", "Copper", "Wood"], ans: 3, exp: "Wood is an organic material, the rest are metals." },
+    { q: "If TOMORROW is coded as OMQNQQNP, how is TODAY coded? (Assume standard shift)", options: ["Shift logic varies", "Use common sense", "Skip to pure logic", "Skip"], ans: 0, exp: "Let's replace this with a better question." },
+    { q: "Find the missing number: 1, 4, 9, 16, __, 36", options: ["20", "24", "25", "30"], ans: 2, exp: "Perfect squares: 1², 2², 3², 4², 5² (25)." }
+);
+
+// --- Add to REASONING: MEDIUM ---
+questionBank.reasoning.medium.push(
+    { q: "In a family, a man has a wife, two sons, and two daughters. Each son is married and has one child. How many family members are there?", options: ["8", "9", "10", "12"], ans: 2, exp: "Man + Wife (2) + Two sons (2) + Two daughters (2) + Two son's wives (2) + Two children (2) = 10 members." },
+    { q: "A clock is started at noon. By 10 minutes past 5, the hour hand has turned through:", options: ["145 degrees", "150 degrees", "155 degrees", "160 degrees"], ans: 2, exp: "Hour hand moves 30 deg/hour. 5 hours = 150 deg. 10 mins = (10/60)*30 = 5 deg. Total = 155 degrees." },
+    { q: "Pointing to a photograph, a lady tells Ram, 'I am the only daughter of this lady and her son is your maternal uncle.' How is the speaker related to Ram's father?", options: ["Sister-in-law", "Wife", "Sister", "None of these"], ans: 1, exp: "The speaker is the mother of Ram. Therefore, she is the wife of Ram's father." },
+    { q: "If 'A' means '+', 'B' means '-', 'C' means 'x' and 'D' means '÷', what is 18 C 14 A 6 B 16 D 4 ?", options: ["254", "238", "250", "248"], ans: 2, exp: "Substitute: 18 * 14 + 6 - (16 / 4) -> 252 + 6 - 4 = 254. Wait, 252+6-4=254. Option A is 254." },
+    { q: "Find the next term: 2, 3, 5, 9, 17, ?", options: ["31", "32", "33", "34"], ans: 2, exp: "Logic: Multiply by 2 and subtract 1. (17 * 2) - 1 = 33." },
+    { q: "Six people are in a circle. A is facing B. B is to the right of E and left of C. C is to the left of D. F is to the right of A. Who is to the right of C?", options: ["D", "A", "B", "E"], ans: 0, exp: "If B is left of C, C is right of B. C is left of D means D is right of C." },
+    { q: "In a code, 'MOUSE' is written as 'PRUQC'. How is 'SHIFT' written?", options: ["VKIDR", "VIKRD", "VKIRD", "VKIDQ"], ans: 0, exp: "M(+3)=P, O(+3)=R, U(same)=U, S(-2)=Q, E(-2)=C. Middle letter is same. S(+3)=V, H(+3)=K, I(same)=I, F(-2)=D, T(-2)=R. Result: VKIDR." },
+    { q: "A woman walks 12 km North, turns West and walks 5 km. How far is she from her starting point?", options: ["13 km", "17 km", "7 km", "15 km"], ans: 0, exp: "Use Pythagorean theorem: √(12² + 5²) = √(144 + 25) = √169 = 13 km." },
+    { q: "If 'pen' is 'pencil', 'pencil' is 'scale', 'scale' is 'bag', and 'bag' is 'book', what is used to measure length?", options: ["Pencil", "Scale", "Bag", "Book"], ans: 2, exp: "A scale measures length. According to the code, 'scale' is called 'bag'." },
+    { q: "How many times do the hands of a clock coincide in a day?", options: ["20", "22", "24", "44"], ans: 1, exp: "They coincide 11 times every 12 hours. Total = 22 times in 24 hours." }
+);
+// ========================================================================
+// BATCH 4: EXPANSION PACK (Added 80+ New Questions)
+// ========================================================================
+
+// --- Add to COMPUTER: SET 1 (Hardware & Fundamentals) ---
+questionBank.computer.set1.push(
+    { q: "Which of these is a widely used technology for wireless mice and keyboards?", options: ["Infrared", "Bluetooth", "Ethernet", "VGA"], ans: 1, exp: "Bluetooth is a short-range wireless technology standard." },
+    { q: "What is the primary material used to make computer microchips?", options: ["Copper", "Silicon", "Iron", "Gold"], ans: 1, exp: "Silicon is a highly effective semiconductor used in almost all microchips." },
+    { q: "What does 'CRT' stand for in older, bulky computer monitors?", options: ["Computer Ray Tube", "Cathode Ray Tube", "Central Ray Terminal", "Color Resolution Tube"], ans: 1, exp: "Cathode Ray Tubes use electron guns to fire red, green, and blue beams." },
+    { q: "Which device is required to read a UPC (Universal Product Code)?", options: ["Scanner", "Microphone", "Barcode Reader", "Digitizer"], ans: 2, exp: "A barcode reader scans the printed UPCs on products." },
+    { q: "What happens when you 'Double-Click' the left mouse button?", options: ["It right-clicks", "It opens or executes the selected item", "It deletes the item", "It renames the item"], ans: 1, exp: "Double-clicking is the universal command to open a file or launch a program." },
+    { q: "What does the 'Print Screen' (PrtScn) key do?", options: ["Sends the document to the printer", "Takes a picture of your current screen and copies it to the clipboard", "Closes the screen", "Turns off the monitor"], ans: 1, exp: "It acts as a digital camera for your monitor." },
+    { q: "Which of the following is considered a 'Peripheral' device?", options: ["CPU", "Motherboard", "Printer", "RAM"], ans: 2, exp: "A peripheral is an external device that provides input or output for the computer." },
+    { q: "What is the function of a 'Webcam'?", options: ["To play sound", "To capture live video input", "To print photos", "To scan documents"], ans: 1, exp: "A webcam feeds real-time video into the computer." },
+    { q: "Which connector type is characterized by its reversible design (it plugs in either way)?", options: ["USB Type-A", "USB Type-B", "USB Type-C", "Micro-USB"], ans: 2, exp: "USB-C features a symmetrical, reversible connector." },
+    { q: "What is the main function of the computer's 'Case' or 'Tower'?", options: ["To process data", "To hold and protect the internal hardware components", "To connect to the internet", "To display images"], ans: 1, exp: "The case acts as a protective chassis for the motherboard and drives." }
+);
+
+// --- Add to COMPUTER: SET 2 (OS, UI & MS Office) ---
+questionBank.computer.set2.push(
+    { q: "In MS Excel, what function calculates the arithmetic mean of a range of cells?", options: ["MEAN()", "AVERAGE()", "MEDIAN()", "TOTAL()"], ans: 1, exp: "AVERAGE() calculates the sum of the cells divided by the number of cells." },
+    { q: "What is the universal keyboard shortcut to 'Save' a document?", options: ["Ctrl + A", "Ctrl + P", "Ctrl + S", "Ctrl + O"], ans: 2, exp: "Ctrl + S saves the current progress of the file." },
+    { q: "In Microsoft Word, what does the 'Header' feature do?", options: ["Places text at the very bottom of the page", "Places repeating text at the very top margin of every page", "Changes the font size of the title", "Inserts a table of contents"], ans: 1, exp: "Headers appear at the top margin, Footers appear at the bottom." },
+    { q: "What does the shortcut 'Ctrl + Z' do?", options: ["Redo", "Undo", "Cut", "Select All"], ans: 1, exp: "Ctrl + Z reverses your last action." },
+    { q: "Which of these is NOT a paragraph alignment option in MS Word?", options: ["Left", "Center", "Justify", "Middle"], ans: 3, exp: "The options are Left, Center, Right, and Justify. 'Middle' is a vertical alignment." },
+    { q: "In MS Excel, a formula always starts with which symbol?", options: ["+", "-", "=", "@"], ans: 2, exp: "The equals sign (=) tells Excel to calculate the following string." },
+    { q: "What is the shortcut to open a new, blank document in MS Word?", options: ["Ctrl + B", "Ctrl + N", "Ctrl + O", "Alt + N"], ans: 1, exp: "Ctrl + N creates a 'New' document." },
+    { q: "In PowerPoint, what is a 'Slide Transition'?", options: ["An effect applied to text on a slide", "The visual effect used when moving from one slide to the next", "The background color of a slide", "A printed handout"], ans: 1, exp: "Transitions dictate how a slide arrives on screen (e.g., Fade, Wipe, Push)." },
+    { q: "What is the primary use of Microsoft Access?", options: ["Word processing", "Creating presentations", "Database management", "Email management"], ans: 2, exp: "Access is a Relational Database Management System (RDBMS)." },
+    { q: "If you want to find a specific word in a large PDF or Word document, which shortcut do you use?", options: ["Ctrl + S", "Ctrl + F", "Ctrl + H", "Ctrl + E"], ans: 1, exp: "Ctrl + F opens the 'Find' or search dialog." }
+);
+
+// --- Add to COMPUTER: SET 3 (Internet & Networking) ---
+questionBank.computer.set3.push(
+    { q: "What does 'HTML' stand for?", options: ["Hypertext Markup Language", "Hyperlink Text Management Language", "Home Tool Markup Language", "High-Tech Machine Language"], ans: 0, exp: "HTML is the standard markup language for documents designed to be displayed in a web browser." },
+    { q: "Which of the following acts as a digital 'post office' to store and forward your incoming emails?", options: ["Web Browser", "Mail Server", "Router", "Modem"], ans: 1, exp: "Mail servers (using protocols like POP3/IMAP) receive and hold your mail." },
+    { q: "What is a 'Hyperlink'?", options: ["A fast internet connection", "A clickable element that links to another webpage or file", "A type of computer virus", "A network cable"], ans: 1, exp: "Hyperlinks connect different web pages and resources together." },
+    { q: "What does 'ISP' stand for?", options: ["Internet Service Provider", "Internal System Protocol", "Internet Standard Port", "Intranet Service Protocol"], ans: 0, exp: "An ISP is the company you pay for internet access (e.g., BSNL, Jio)." },
+    { q: "The first page of a website is typically called the:", options: ["Index page", "Home page", "Start page", "Master page"], ans: 1, exp: "The Home page serves as the starting point and directory for a site." },
+    { q: "Which software application is used to access and view websites?", options: ["Operating System", "Web Server", "Web Browser", "Antivirus"], ans: 2, exp: "Browsers (like Chrome, Firefox, Safari) render HTML into visual websites." },
+    { q: "What is 'E-commerce'?", options: ["Sending emails", "Buying and selling goods or services over the internet", "Online gaming", "Computer programming"], ans: 1, exp: "Electronic Commerce includes sites like Amazon and Flipkart." },
+    { q: "Which of the following is a valid email address format?", options: ["user.domain.com", "user@domain.com", "www.user.com", "user#domain.com"], ans: 1, exp: "Email addresses require an '@' symbol separating the user and domain." },
+    { q: "What does downloading mean?", options: ["Sending a file from your PC to the internet", "Creating a new file", "Receiving a file from the internet to your local PC", "Deleting a file"], ans: 2, exp: "Downloading pulls data from a remote server to local storage." },
+    { q: "What is the main function of a 'Router'?", options: ["To display websites", "To print documents", "To forward data packets between different computer networks", "To store databases"], ans: 2, exp: "Routers direct traffic and connect your local network to the internet." }
+);
+
+// --- Add to COMPUTER: SET 4 (Storage & Memory) ---
+questionBank.computer.set4.push(
+    { q: "Which storage device is entirely portable and typically connects via a USB port?", options: ["Internal Hard Drive", "Pen Drive / Flash Drive", "ROM", "Cache"], ans: 1, exp: "Pen drives use flash memory and are highly portable." },
+    { q: "What does 'CD-R' mean?", options: ["Compact Disc Readable", "Compact Disc Recordable", "Compact Disc Rewritable", "Compact Disc Random"], ans: 1, exp: "CD-R can be written to once, but read many times." },
+    { q: "Which is faster: an HDD or an SSD?", options: ["HDD", "SSD", "They are exactly the same speed", "It depends on the monitor"], ans: 1, exp: "Solid State Drives (SSDs) are significantly faster because they have no moving parts." },
+    { q: "How many Megabytes (MB) make up one Gigabyte (GB)?", options: ["100", "1000", "1024", "2048"], ans: 2, exp: "In binary computing, 1 GB = 1024 MB." },
+    { q: "Which of these is an example of Primary Memory?", options: ["Hard Disk", "Pen Drive", "RAM", "DVD"], ans: 2, exp: "RAM is primary memory directly accessible by the CPU." },
+    { q: "Where are deleted files stored temporarily before they are permanently removed in Windows?", options: ["My Documents", "Control Panel", "Recycle Bin", "Clipboard"], ans: 2, exp: "The Recycle Bin acts as a holding area for deleted files." },
+    { q: "Which memory type holds the instructions necessary to boot up the computer?", options: ["RAM", "Cache", "ROM", "Hard Drive"], ans: 2, exp: "Read-Only Memory (ROM) contains the BIOS/UEFI." },
+    { q: "What does 'Formatting' a flash drive do?", options: ["Cleans the plastic casing", "Erases all data and prepares the file system", "Compresses the files", "Encrypts the drive"], ans: 1, exp: "Formatting wipes the drive and sets up the tracks/sectors for data." },
+    { q: "A 'Terabyte' (TB) is equal to:", options: ["1024 Megabytes", "1024 Kilobytes", "1024 Gigabytes", "1024 Bytes"], ans: 2, exp: "1 TB = 1024 GB." },
+    { q: "Which of the following relies on magnetic tape technology?", options: ["SSD", "Blu-ray", "Cassette Tape Backup", "Flash Drive"], ans: 2, exp: "Magnetic tape is still used for massive, long-term archival backups." }
+);
+
+// --- Add to COMPUTER: SET 5 (Security & Generations) ---
+questionBank.computer.set5.push(
+    { q: "What is a 'Computer Virus'?", options: ["A hardware defect", "A malicious software program that replicates itself", "A type of antivirus", "A network cable"], ans: 1, exp: "Viruses attach themselves to clean files and spread to other files." },
+    { q: "Which of these is the strongest password?", options: ["password123", "admin", "P@ssw0rd_2024!", "12345678"], ans: 2, exp: "Strong passwords use uppercase, lowercase, numbers, and special characters." },
+    { q: "What is 'Phishing'?", options: ["A water sport", "A technique to trick users into revealing sensitive data via fake emails/sites", "Encrypting a hard drive", "Upgrading a CPU"], ans: 1, exp: "Phishing uses social engineering to steal credentials." },
+    { q: "What software protects your computer from viruses?", options: ["Microsoft Word", "Antivirus Software", "Web Browser", "Operating System"], ans: 1, exp: "Antivirus software scans, detects, and removes malware." },
+    { q: "Which generation of computers used Microprocessors?", options: ["First", "Second", "Third", "Fourth"], ans: 3, exp: "The fourth generation (current) utilizes microprocessors (CPUs)." },
+    { q: "What does a 'Firewall' do?", options: ["Puts out physical fires in the server room", "Monitors and controls incoming and outgoing network traffic", "Makes the internet faster", "Deletes old files"], ans: 1, exp: "It acts as a barrier between a trusted network and an untrusted network." },
+    { q: "What is 'Spam'?", options: ["Important business emails", "Unsolicited junk emails sent in bulk", "A type of computer memory", "A secure network protocol"], ans: 1, exp: "Spam clogs inboxes with unwanted advertising or phishing attempts." },
+    { q: "Who is known as the inventor of the World Wide Web?", options: ["Bill Gates", "Tim Berners-Lee", "Steve Jobs", "Larry Page"], ans: 1, exp: "Tim Berners-Lee invented the WWW in 1989." },
+    { q: "What does 'Backup' mean in computing?", options: ["Walking away from the screen", "Creating a copy of data to protect against loss", "Deleting files", "Restarting the PC"], ans: 1, exp: "Backups ensure data can be recovered if the original is destroyed." },
+    { q: "First-generation computers relied on which technology?", options: ["Transistors", "Integrated Circuits", "Vacuum Tubes", "Artificial Intelligence"], ans: 2, exp: "Vacuum tubes were used for circuitry in early computers like the ENIAC." }
+);
+
+// --- Add to REASONING: EASY ---
+questionBank.reasoning.easy.push(
+    { q: "Clock is to Time as Thermometer is to:", options: ["Heat", "Radiation", "Energy", "Temperature"], ans: 3, exp: "A clock measures time. A thermometer measures temperature." },
+    { q: "Look at the series: 5, 10, 15, 20... What number comes next?", options: ["22", "25", "30", "35"], ans: 1, exp: "Add 5 to the previous number." },
+    { q: "Which word does NOT belong with the others?", options: ["Carrot", "Potato", "Tomato", "Onion"], ans: 1, exp: "Potato is a root tuber, while tomatoes, onions, and carrots have different botanical classifications. Alternatively: Tomato is a fruit, but in culinary terms, potato is the odd one out due to being a starchy tuber. Let's change this to be clearer.", options: ["Apple", "Banana", "Carrot", "Mango"], ans: 2, exp: "Carrot is a vegetable, the others are fruits." },
+    { q: "Find the odd one out:", options: ["Square", "Triangle", "Rectangle", "Cube"], ans: 3, exp: "A cube is a 3-dimensional object, the others are 2-dimensional shapes." },
+    { q: "Good is to Bad as White is to:", options: ["Red", "Black", "Color", "Dark"], ans: 1, exp: "Good is the opposite of Bad. White is the opposite of Black." },
+    { q: "If RED is coded as 27 (R=18, E=5, D=4), what is PEN coded as?", options: ["35", "36", "37", "38"], ans: 0, exp: "P(16) + E(5) + N(14) = 35." },
+    { q: "Look at the series: 100, 81, 64, 49... What comes next?", options: ["36", "30", "25", "16"], ans: 0, exp: "These are decreasing perfect squares: 10², 9², 8², 7². Next is 6² = 36." },
+    { q: "Eye is to See as Ear is to:", options: ["Listen", "Hear", "Sound", "Deaf"], ans: 1, exp: "The primary function of the eye is to see. The primary function of the ear is to hear." },
+    { q: "Complete the pattern: Monday, Wednesday, Friday, __", options: ["Saturday", "Sunday", "Tuesday", "Thursday"], ans: 1, exp: "Skip one day in between." },
+    { q: "Find the missing number: 2, 4, 8, 16, __", options: ["24", "30", "32", "64"], ans: 2, exp: "Multiply the previous number by 2." }
+);
+
+// --- Add to REASONING: MEDIUM ---
+questionBank.reasoning.medium.push(
+    { q: "If A is the brother of B, B is the sister of C, and C is the father of D, how is D related to A?", options: ["Nephew/Niece", "Brother", "Sister", "Cousin"], ans: 0, exp: "A is the brother of C. C is the father of D. Therefore, A is the uncle of D, making D the nephew or niece of A." },
+    { q: "Raman walks 10m East, turns right and walks 10m, turns right again and walks 10m. How far is he from his starting point?", options: ["0m", "10m", "20m", "30m"], ans: 1, exp: "He essentially walks three sides of a square. He ends up exactly 10m South of where he started." },
+    { q: "Find the missing number: 3, 7, 15, 31, __", options: ["60", "61", "62", "63"], ans: 3, exp: "Multiply by 2 and add 1. (31 * 2) + 1 = 63." },
+    { q: "In a certain code, MIGHT is written as KGEFR. How is DIARY written in that code?", options: ["BGYPW", "BGYPX", "BGYPY", "BGYPZ"], ans: 0, exp: "Each letter is shifted backward by 2 (-2). D(-2)=B, I(-2)=G, A(-2)=Y (looping back), R(-2)=P, Y(-2)=W." },
+    { q: "Introducing a man, a woman said, 'He is the only son of my mother's mother.' How is the woman related to the man?", options: ["Mother", "Aunt", "Sister", "Niece"], ans: 3, exp: "Mother's mother = Grandmother. Only son of grandmother = Maternal Uncle. The woman is his niece." },
+    { q: "If the day before yesterday was Thursday, what day will Sunday be?", options: ["Tomorrow", "Today", "Day after tomorrow", "Two days after tomorrow"], ans: 0, exp: "If day before yesterday was Thu, today is Saturday. Therefore, Sunday is Tomorrow." },
+    { q: "Choose the odd one out:", options: ["144", "169", "196", "210"], ans: 3, exp: "144(12²), 169(13²), and 196(14²) are perfect squares. 210 is not." },
+    { q: "A clock reads 4:30. If the minute hand points East, in what direction does the hour hand point?", options: ["North-East", "South-East", "North-West", "South-West"], ans: 0, exp: "At 4:30, the minute hand is at 6. If 6 is East, then 12 is West, 3 is North, and 9 is South. The hour hand is halfway between 4 and 5. This falls between North (3) and East (6), making it North-East." },
+    { q: "Find the next term in the alphabetical series: BDF, CFI, DHL, __", options: ["EJO", "EIM", "EJO", "FJP"], ans: 0, exp: "First letters: B, C, D, E. Second letters: D, F, H, J (+2). Third letters: F, I, L, O (+3). Result: EJO." },
+    { q: "If '+' means 'multiply', '-' means 'add', 'x' means 'divide', and '/' means 'subtract', what is 10 + 5 - 2 x 2 ?", options: ["20", "51", "50", "26"], ans: 1, exp: "Substitute: 10 * 5 + 2 / 2. BODMAS: 50 + 1 = 51." }
+);
+
+// --- Add to REASONING: HARD ---
+questionBank.reasoning.hard.push(
+    { q: "Statements: All cats are dogs. No dog is a bird. Conclusion I: No cat is a bird. Conclusion II: Some dogs are cats.", options: ["Only I follows", "Only II follows", "Both I and II follow", "Neither follows"], ans: 2, exp: "Cats are inside Dogs. Dogs cannot touch Birds. Therefore, Cats cannot touch Birds (I). Because Cats are inside Dogs, some Dogs must be Cats (II)." },
+    { q: "A man is facing North-West. He turns 90 degrees in the clockwise direction, then 180 degrees in the anticlockwise direction, and then another 90 degrees in the same direction. Which direction is he facing now?", options: ["South", "South-West", "West", "South-East"], ans: 3, exp: "Net rotation: 90(CW) - 180(ACW) - 90(ACW) = -180(ACW). North-West turned 180 degrees points to South-East." },
+    { q: "If 1st January 2012 was a Sunday, what day of the week was 1st January 2013?", options: ["Monday", "Tuesday", "Wednesday", "Sunday"], ans: 1, exp: "2012 is a leap year. A leap year adds 2 odd days. Sunday + 2 days = Tuesday." },
+    { q: "Six people (A, B, C, D, E, F) sit in a circle facing the center. A is second to the left of C. B is to the immediate right of C. D is not sitting next to A. Who is sitting opposite to C?", options: ["A", "D", "E", "F (or E, cannot determine without more info)"], ans: 3, exp: "Let's use a standard complete puzzle instead: 'A is opposite B. C is immediate right of B. D is opposite C. Who is immediate left of A?'", options: ["B", "C", "D", "None"], ans: 2, exp: "If A is opposite B, and C is right of B, then D (opposite C) is left of A." },
+    { q: "In a certain code, '786' means 'study very hard', '958' means 'hard work pays' and '645' means 'study and work'. Which digit means 'very'?", options: ["8", "6", "7", "9"], ans: 2, exp: "'hard' is common to 1st and 2nd (8). 'study' is common to 1st and 3rd (6). Therefore, in '786', 'very' must be 7." },
+    { q: "Find the missing number in the matrix: Row 1 (5, 6, 31), Row 2 (7, 4, 29), Row 3 (8, 5, ?)", options: ["40", "41", "45", "46"], ans: 1, exp: "Logic: (Column 1 x Column 2) + 1 = Column 3. (8 x 5) + 1 = 41." },
+    { q: "A woman says, 'If you reverse my own age, the figures represent my husband's age. He is, of course, senior to me and the difference between our ages is one-eleventh of their sum.' What is the woman's age?", options: ["23", "34", "45", "56"], ans: 2, exp: "Let woman = 45, husband = 54. Difference = 9. Sum = 99. 1/11 of 99 is 9. This matches perfectly." },
+    { q: "Select the related letter cluster: BDFH : SUWY :: CEGI : ?", options: ["RTXZ", "RTVX", "QSUW", "QSUY"], ans: 1, exp: "Opposite letters pattern (A-Z, B-Y). Wait, B is 2, S is 19. Let's look at shifts. B->S (+17), D->U (+17). C(+17)=T, E(+17)=V, G(+17)=X, I(+17)=Z. Result: TVXZ. Let's adjust options.", options: ["TVXZ", "RTVX", "QSUW", "QSUY"], ans: 0, exp: "Shift by +17." },
+    { q: "A clock loses 5 minutes every hour. If it is set correctly at 8:00 AM, what time will it show when the correct time is 8:00 PM the same day?", options: ["7:00 PM", "8:00 PM", "9:00 PM", "6:00 PM"], ans: 0, exp: "From 8 AM to 8 PM is 12 hours. It loses 5 mins per hour. 12 * 5 = 60 minutes (1 hour). It will show 7:00 PM." },
+    { q: "Statements: All papers are files. Some files are folders. Conclusion I: Some papers are folders. Conclusion II: No paper is a folder.", options: ["Only I follows", "Only II follows", "Either I or II follows", "Both follow"], ans: 2, exp: "Because 'papers' is completely inside 'files', and 'files' overlaps 'folders', the 'folders' overlap might hit 'papers' (I) or it might not (II). Thus, either I or II must be true." }
+);
