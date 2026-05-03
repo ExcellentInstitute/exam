@@ -35,16 +35,17 @@
         /* Identity Verification Section */
         #verify-section { display: none; text-align: center; padding: 20px; border: 2px dashed #2c6eb5; border-radius: 5px; margin-top: 20px; background-color: #f9fbfd;}
         #verify-img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #2c6eb5; margin-bottom: 15px; background-color: #fff;}
-        .verify-btns { display: flex; gap: 10px; justify-content: center; margin-top: 15px;}
+        .verify-btns { display: flex; gap: 10px; justify-content: center; margin-top: 15px; flex-wrap: wrap;}
         .btn-confirm { background-color: #2c6eb5; color: white; padding: 10px 20px; border: none; border-radius: 3px; cursor: pointer; font-weight: bold;}
         .btn-reject { background-color: #d32f2f; color: white; padding: 10px 20px; border: none; border-radius: 3px; cursor: pointer; font-weight: bold;}
         
         /* Multiple Matches Grid */
         .match-grid { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-top: 20px; }
-        .match-card { border: 2px solid #ccc; border-radius: 8px; padding: 15px; cursor: pointer; width: 140px; transition: 0.3s; background: white;}
+        .match-card { border: 2px solid #ccc; border-radius: 8px; padding: 15px; cursor: pointer; width: 140px; transition: 0.3s; background: white; display: flex; flex-direction: column; align-items: center; text-align: center;}
         .match-card:hover { border-color: #2c6eb5; background: #e6f0fa; transform: translateY(-3px); box-shadow: 0 4px 8px rgba(0,0,0,0.1);}
-        .match-card img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 2px solid #eee; background-color: #fff;}
-        .match-card p { margin: 0; font-size: 14px; font-weight: bold; color: #333; word-wrap: break-word;}
+        .match-card img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 2px solid #eee; background-color: #fff;}
+        .match-card p { margin: 0; font-size: 14px; font-weight: bold; color: #333; word-wrap: break-word; line-height: 1.2;}
+        .match-card .sub-info { font-size: 11px; color: #666; margin-top: 5px; word-wrap: break-word; }
 
         #exam-interface { display: none; height: calc(100vh - 54px); flex-direction: row; }
         .left-panel { flex: 1; display: flex; flex-direction: column; background: white; border-right: 2px solid #ccc; }
@@ -142,7 +143,7 @@
             /* Right Panel Mobile Tweaks */
             .right-panel { width: 100%; flex: none; }
             .palette-container { height: auto; max-height: none; overflow-y: visible; }
-            .grid { grid-template-columns: repeat(7, 1fr); gap: 10px;} /* Fit more items horizontally on mobile */
+            .grid { grid-template-columns: repeat(7, 1fr); gap: 10px;}
             
             /* Question Text & Options */
             .options-list li { font-size: 16px; padding: 12px 8px; }
@@ -163,7 +164,7 @@
             .grid { grid-template-columns: repeat(5, 1fr); }
             .verify-btns { flex-direction: column; }
             .btn-confirm, .btn-reject { width: 100%; padding: 15px; }
-            .action-bar > div { flex-direction: column; } /* Stack buttons entirely on tiny screens */
+            .action-bar > div { flex-direction: column; }
             .btn { width: 100%; }
         }
     </style>
@@ -235,13 +236,14 @@
             </div>
             
             <div id="multi-match-view" style="display: none;">
-                <h3 style="color: #2c6eb5;">We found multiple students. Please click your profile:</h3>
+                <h3 style="color: #2c6eb5;">We found multiple matches. Please select your profile:</h3>
                 <div id="match-grid-container" class="match-grid"></div>
             </div>
 
             <p id="verify-subtext"></p>
             <div class="verify-btns">
-                <button class="btn-reject" onclick="cancelVerification()">No, Go Back</button>
+                <button class="btn-reject" style="background-color: #7a7a7a;" onclick="cancelVerification()">Cancel</button>
+                <button class="btn-confirm" style="background-color: #f39c12; display: none;" id="btn-guest-opt" onclick="startAsGuest()">Not me, Continue as New Candidate</button>
                 <button class="btn-confirm" id="btn-confirm-single" onclick="finalizeStart()">Yes, Start Exam Now</button>
             </div>
         </div>
@@ -457,7 +459,7 @@
 
         if (matches.length === 0) {
             studentName = nameInput;
-            showGuestScreen(`No registry found for "${nameInput}". Proceeding as Guest.`);
+            showGuestScreen(`No registry found for "${nameInput}". Proceeding as a new candidate.`);
         } else if (matches.length === 1) {
             const s = matches[0];
             studentName = s.name;
@@ -473,7 +475,10 @@
         document.getElementById('verify-section').style.display = 'block';
         document.getElementById('single-match-view').style.display = 'block';
         document.getElementById('multi-match-view').style.display = 'none';
+        
         document.getElementById('btn-confirm-single').style.display = 'inline-block';
+        document.getElementById('btn-confirm-single').innerText = 'Start as Guest';
+        document.getElementById('btn-guest-opt').style.display = 'none';
         
         document.getElementById('verify-img').src = 'https://via.placeholder.com/150?text=No+Photo';
         studentPhotoUrl = 'https://via.placeholder.com/90?text=Guest';
@@ -485,7 +490,10 @@
         document.getElementById('verify-section').style.display = 'block';
         document.getElementById('single-match-view').style.display = 'block';
         document.getElementById('multi-match-view').style.display = 'none';
+        
         document.getElementById('btn-confirm-single').style.display = 'inline-block';
+        document.getElementById('btn-confirm-single').innerText = 'Yes, Start Exam Now';
+        document.getElementById('btn-guest-opt').style.display = 'inline-block';
 
         const verifyImg = document.getElementById('verify-img');
         verifyImg.src = studentPhotoUrl || 'https://via.placeholder.com/150?text=No+Photo';
@@ -497,7 +505,9 @@
         document.getElementById('verify-section').style.display = 'block';
         document.getElementById('single-match-view').style.display = 'none';
         document.getElementById('multi-match-view').style.display = 'block';
+        
         document.getElementById('btn-confirm-single').style.display = 'none'; 
+        document.getElementById('btn-guest-opt').style.display = 'none'; 
 
         const grid = document.getElementById('match-grid-container');
         grid.innerHTML = '';
@@ -506,20 +516,55 @@
             const rawUrl = s.image || s.photo || s.profilePic || s.picture || s.url || s.img || null;
             const picUrl = formatDriveLink(rawUrl);
             
+            // Extract extra data to help tell identical names apart (Course, Phone, Batch, etc.)
+            let extraInfo = s.course || s.phone || s.batch || s.email || "";
+            let extraHtml = extraInfo ? `<div class="sub-info">${extraInfo}</div>` : "";
+            
             const card = document.createElement('div');
             card.className = 'match-card';
             card.innerHTML = `
-                <img src="${picUrl}" alt="${s.name}" onerror="this.src='https://via.placeholder.com/150?text=No+Photo'">
+                <img src="${picUrl}" onerror="this.src='https://via.placeholder.com/150?text=No+Photo'">
                 <p>${s.name}</p>
+                ${extraHtml}
             `;
             
             card.onclick = () => {
+                // When a card is clicked, select this user and show the final confirmation screen
                 studentName = s.name;
                 studentPhotoUrl = picUrl;
-                finalizeStart();
+                
+                document.getElementById('multi-match-view').style.display = 'none';
+                document.getElementById('single-match-view').style.display = 'block';
+                
+                document.getElementById('btn-confirm-single').style.display = 'inline-block';
+                document.getElementById('btn-confirm-single').innerText = 'Yes, Start Exam Now';
+                document.getElementById('btn-guest-opt').style.display = 'inline-block';
+                
+                document.getElementById('verify-img').src = picUrl;
+                document.getElementById('verify-text').innerText = `You selected ${s.name}. Is this correct?`;
             };
             grid.appendChild(card);
         });
+
+        // Add the "New Person" card
+        const guestCard = document.createElement('div');
+        guestCard.className = 'match-card';
+        guestCard.style.borderColor = '#f39c12';
+        guestCard.innerHTML = `
+            <img src="https://via.placeholder.com/150?text=New" alt="New Candidate">
+            <p>Someone Else</p>
+            <div class="sub-info" style="color: #f39c12; font-weight:bold;">Continue as a new candidate</div>
+        `;
+        guestCard.onclick = () => {
+            startAsGuest();
+        };
+        grid.appendChild(guestCard);
+    }
+
+    function startAsGuest() {
+        studentName = document.getElementById('student-name').value.trim();
+        studentPhotoUrl = 'https://via.placeholder.com/90?text=Guest';
+        finalizeStart();
     }
 
     function cancelVerification() {
