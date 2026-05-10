@@ -130,25 +130,20 @@
             .config-grid { grid-template-columns: 1fr; gap: 15px; margin-bottom: 15px; }
             .radio-group { flex-direction: column; gap: 10px; align-items: flex-start;}
             
-            /* Exam Interface Mobile Stacking */
             #exam-interface { flex-direction: column; height: auto; min-height: 100vh; }
             .left-panel { flex: none; border-right: none; border-bottom: 4px solid #e7a03c; }
             .question-area { height: auto; overflow-y: visible; padding: 15px; }
             
-            /* Action Bar Mobile Layout */
             .action-bar { flex-direction: column; gap: 10px; padding: 15px; }
             .action-bar > div { display: flex; width: 100%; gap: 10px; justify-content: space-between; }
             .btn { flex: 1; padding: 12px 5px; font-size: 12px; margin: 0 !important; white-space: normal; word-wrap: break-word; text-align: center;}
             
-            /* Right Panel Mobile Tweaks */
             .right-panel { width: 100%; flex: none; }
             .palette-container { height: auto; max-height: none; overflow-y: visible; }
-            .grid { grid-template-columns: repeat(7, 1fr); gap: 10px;}
+            .grid { grid-template-columns: repeat(7, 1fr); gap: 10px;} 
             
-            /* Question Text & Options */
             .options-list li { font-size: 16px; padding: 12px 8px; }
             
-            /* Result Screen Mobile Tweaks */
             #result-screen { padding: 15px; }
             .score-card { padding: 20px; margin: 0; }
             .stat-row { flex-direction: column; align-items: center; gap: 5px; margin: 10px 0; text-align: center; border-bottom: 1px dashed #eee; padding-bottom: 8px;}
@@ -159,12 +154,11 @@
             .btn-resume { font-size: 16px; padding: 12px 20px; }
         }
 
-        /* Even smaller phones */
         @media screen and (max-width: 480px) {
             .grid { grid-template-columns: repeat(5, 1fr); }
             .verify-btns { flex-direction: column; }
             .btn-confirm, .btn-reject { width: 100%; padding: 15px; }
-            .action-bar > div { flex-direction: column; }
+            .action-bar > div { flex-direction: column; } 
             .btn { width: 100%; }
         }
     </style>
@@ -236,7 +230,7 @@
             </div>
             
             <div id="multi-match-view" style="display: none;">
-                <h3 style="color: #2c6eb5;">We found multiple matches. Please select your profile:</h3>
+                <h3 style="color: #2c6eb5;">We found multiple matches. Please click your profile:</h3>
                 <div id="match-grid-container" class="match-grid"></div>
             </div>
 
@@ -373,18 +367,16 @@
     
     // --- ON LOAD INITIALIZATION ---
     document.addEventListener("DOMContentLoaded", () => {
-        // Check hash and day
         const hash = window.location.hash.toLowerCase();
         const isHost = (hash === '#admin');
-        const isSunday = (new Date().getDay() === 0); // 0 = Sunday
+        const isSunday = (new Date().getDay() === 0); 
 
-        // If it IS Sunday OR the user typed #admin, we unlock the portal.
         if (isSunday || isHost) {
             document.getElementById('access-denied-screen').style.display = 'none';
             document.getElementById('pre-exam').style.display = 'block';
             
             updateSetDropdown();
-            preloadDatabase(); 
+            fetchAndNormalizeData(); 
             
             makeDraggable(document.getElementById('drag-question-area'));
             makeDraggable(document.getElementById('drag-palette'));
@@ -392,23 +384,49 @@
         }
     });
 
-    // --- BACKGROUND PRE-LOADER ---
-    async function preloadDatabase() {
+    // --- BULLETPROOF DATA NORMALIZER ---
+    async function fetchAndNormalizeData() {
         const stored = sessionStorage.getItem('excellent_db_cache');
         if (stored) {
             cachedDatabase = JSON.parse(stored);
-            return;
+            return true;
         }
 
         try {
             const response = await fetch(`${GAS_WEB_APP_URL}?pass=${encodeURIComponent(SYSTEM_PASSWORD)}`);
-            const data = await response.json();
-            if(!data.error) {
-                cachedDatabase = data.students || [];
-                sessionStorage.setItem('excellent_db_cache', JSON.stringify(cachedDatabase));
+            const textResponse = await response.text(); 
+            const data = JSON.parse(textResponse);
+            
+            let rawData = data.students || data.data || data; 
+            
+            // Check if Google sent back a 2D Array (Rows and Columns) instead of Objects
+            if (Array.isArray(rawData) && rawData.length > 0 && Array.isArray(rawData[0])) {
+                let headers = rawData[0].map(h => String(h).toLowerCase().trim());
+                
+                let nameIdx = headers.findIndex(h => h.includes('name'));
+                let imgIdx = headers.findIndex(h => h.includes('image') || h.includes('photo') || h.includes('pic') || h.includes('url'));
+                let courseIdx = headers.findIndex(h => h.includes('course') || h.includes('class') || h.includes('batch'));
+                
+                if(nameIdx === -1) nameIdx = 0; 
+                
+                let normalizedData = [];
+                for(let i = 1; i < rawData.length; i++) {
+                    normalizedData.push({
+                        name: rawData[i][nameIdx] ? String(rawData[i][nameIdx]) : "",
+                        image: imgIdx > -1 ? rawData[i][imgIdx] : null,
+                        course: courseIdx > -1 ? String(rawData[i][courseIdx]) : ""
+                    });
+                }
+                cachedDatabase = normalizedData;
+            } else {
+                cachedDatabase = rawData; 
             }
+            
+            sessionStorage.setItem('excellent_db_cache', JSON.stringify(cachedDatabase));
+            return true;
         } catch (e) {
-            console.log("Silent preload failed.");
+            console.log("Database connection failed. Proceeding offline.", e);
+            return false;
         }
     }
 
@@ -438,24 +456,18 @@
         btn.classList.add('btn-disabled');
         btn.disabled = true;
 
-        let studentsData = cachedDatabase;
+        if (!cachedDatabase) {
+            await fetchAndNormalizeData();
+        }
 
-        if (!studentsData) {
-            try {
-                const response = await fetch(`${GAS_WEB_APP_URL}?pass=${encodeURIComponent(SYSTEM_PASSWORD)}`);
-                const data = await response.json();
-                if(data.error) throw new Error("Wrong Password");
-                studentsData = data.students || [];
-                sessionStorage.setItem('excellent_db_cache', JSON.stringify(studentsData));
-            } catch (error) {
-                studentName = nameInput;
-                showGuestScreen(`Could not connect to database. Proceeding offline as Guest: ${studentName}`);
-                return;
-            }
+        if (!cachedDatabase || cachedDatabase.length === 0) {
+            studentName = nameInput;
+            showGuestScreen(`Could not connect to database. Proceeding offline as: ${studentName}`);
+            return;
         }
 
         const searchTerm = nameInput.toLowerCase();
-        const matches = studentsData.filter(s => s.name && s.name.toLowerCase().includes(searchTerm));
+        const matches = cachedDatabase.filter(s => s.name && s.name.toLowerCase().includes(searchTerm));
 
         if (matches.length === 0) {
             studentName = nameInput;
@@ -516,7 +528,6 @@
             const rawUrl = s.image || s.photo || s.profilePic || s.picture || s.url || s.img || null;
             const picUrl = formatDriveLink(rawUrl);
             
-            // Extract extra data to help tell identical names apart (Course, Phone, Batch, etc.)
             let extraInfo = s.course || s.phone || s.batch || s.email || "";
             let extraHtml = extraInfo ? `<div class="sub-info">${extraInfo}</div>` : "";
             
@@ -529,7 +540,6 @@
             `;
             
             card.onclick = () => {
-                // When a card is clicked, select this user and show the final confirmation screen
                 studentName = s.name;
                 studentPhotoUrl = picUrl;
                 
@@ -546,7 +556,6 @@
             grid.appendChild(card);
         });
 
-        // Add the "New Person" card
         const guestCard = document.createElement('div');
         guestCard.className = 'match-card';
         guestCard.style.borderColor = '#f39c12';
