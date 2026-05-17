@@ -230,7 +230,7 @@
             </div>
             
             <div id="multi-match-view" style="display: none;">
-                <h3 style="color: #2c6eb5;">We found multiple matches. Please click your profile:</h3>
+                <h3 style="color: #2c6eb5;">We found multiple matches. Please select your profile:</h3>
                 <div id="match-grid-container" class="match-grid"></div>
             </div>
 
@@ -331,7 +331,7 @@
     // ==========================================
     // GOOGLE APP SCRIPT CONFIGURATION
     // ==========================================
-    const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzyEm9KQasVIaOXOeycxNPYnFa2yooCLJELLKI993nUPDr7DTg4etOx0x8CFMpWNs4/exec'; 
+    const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxFsBuyiWOdTMMGeOgTXhvSmAfUK_uMbdwVO945ejPvnsEOQtX9ZtMCh9RQtBWzHSVj/exec'; 
     const SYSTEM_PASSWORD = 'excellent@9658'; 
 
     let studentName = "";
@@ -394,34 +394,21 @@
 
         try {
             const response = await fetch(`${GAS_WEB_APP_URL}?pass=${encodeURIComponent(SYSTEM_PASSWORD)}`);
-            const textResponse = await response.text(); 
-            const data = JSON.parse(textResponse);
+            const data = await response.json();
             
-            let rawData = data.students || data.data || data; 
+            // Your backend stores data as fullData.students inside the SystemDB JSON block
+            let rawStudents = data.students || [];
             
-            // Check if Google sent back a 2D Array (Rows and Columns) instead of Objects
-            if (Array.isArray(rawData) && rawData.length > 0 && Array.isArray(rawData[0])) {
-                let headers = rawData[0].map(h => String(h).toLowerCase().trim());
-                
-                let nameIdx = headers.findIndex(h => h.includes('name'));
-                let imgIdx = headers.findIndex(h => h.includes('image') || h.includes('photo') || h.includes('pic') || h.includes('url'));
-                let courseIdx = headers.findIndex(h => h.includes('course') || h.includes('class') || h.includes('batch'));
-                
-                if(nameIdx === -1) nameIdx = 0; 
-                
-                let normalizedData = [];
-                for(let i = 1; i < rawData.length; i++) {
-                    normalizedData.push({
-                        name: rawData[i][nameIdx] ? String(rawData[i][nameIdx]) : "",
-                        image: imgIdx > -1 ? rawData[i][imgIdx] : null,
-                        course: courseIdx > -1 ? String(rawData[i][courseIdx]) : ""
-                    });
+            // FORCE ALL KEYS TO LOWERCASE to prevent Case-Sensitive Undefined Errors
+            let normalizedData = rawStudents.map(st => {
+                let norm = {};
+                for(let key in st) {
+                    norm[key.toLowerCase()] = st[key];
                 }
-                cachedDatabase = normalizedData;
-            } else {
-                cachedDatabase = rawData; 
-            }
+                return norm;
+            });
             
+            cachedDatabase = normalizedData;
             sessionStorage.setItem('excellent_db_cache', JSON.stringify(cachedDatabase));
             return true;
         } catch (e) {
@@ -432,6 +419,10 @@
 
     function formatDriveLink(url) {
         if (!url) return 'https://via.placeholder.com/150?text=No+Photo';
+        
+        // Pass through Base64 or generic HTTP links immediately
+        if (url.startsWith('data:image')) return url; 
+        if (url.startsWith('http') && !url.includes('drive.google.com')) return url; 
         
         const driveRegex1 = /drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/;
         const driveRegex2 = /drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/;
@@ -475,7 +466,7 @@
         } else if (matches.length === 1) {
             const s = matches[0];
             studentName = s.name;
-            studentPhotoUrl = formatDriveLink(s.image || s.photo || s.profilePic || s.picture || s.url || s.img || null);
+            studentPhotoUrl = formatDriveLink(s.image || s.photo || s.profilepic || s.picture || s.url || s.img || null);
             showSingleMatchScreen();
         } else {
             showMultiMatchScreen(matches);
@@ -525,7 +516,7 @@
         grid.innerHTML = '';
 
         matches.forEach(s => {
-            const rawUrl = s.image || s.photo || s.profilePic || s.picture || s.url || s.img || null;
+            const rawUrl = s.image || s.photo || s.profilepic || s.picture || s.url || s.img || null;
             const picUrl = formatDriveLink(rawUrl);
             
             let extraInfo = s.course || s.phone || s.batch || s.email || "";
