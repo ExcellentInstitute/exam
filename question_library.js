@@ -6,6 +6,7 @@
 const questionBank = {
     computer: { set1: [], set2: [], set3: [], set4: [], set5: [] },
     reasoning: { easy: [], medium: [], hard: [] }
+    gk: { set1: [], set2: [], set3: [], set4: [], set5: [] }
 };
 
 // --- COMPUTER: SET 1 (Hardware & Fundamentals) ---
