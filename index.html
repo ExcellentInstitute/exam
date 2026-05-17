@@ -196,6 +196,7 @@
                     <select id="exam-subject" onchange="updateSetDropdown()">
                         <option value="computer" selected>Basic Computer Knowledge</option>
                         <option value="reasoning">General Intelligence & Reasoning</option>
+                        <option value="gk">General Knowledge (GK)</option>
                     </select>
                 </div>
                 <div class="input-group">
@@ -362,6 +363,13 @@
             setDropdown.innerHTML += '<option value="easy">Easy (Randomizer)</option>';
             setDropdown.innerHTML += '<option value="medium">Medium (Randomizer)</option>';
             setDropdown.innerHTML += '<option value="hard">Hard (Randomizer)</option>';
+        } else if (subject === 'gk') {
+        // ADDED GK SETS
+        setDropdown.innerHTML += '<option value="set1">Set 1 - History & Culture</option>';
+        setDropdown.innerHTML += '<option value="set2">Set 2 - Geography & Economy</option>';
+        setDropdown.innerHTML += '<option value="set3">Set 3 - Polity & Constitution</option>';
+        setDropdown.innerHTML += '<option value="set4">Set 4 - General Science</option>';
+        setDropdown.innerHTML += '<option value="set5">Set 5 - Current Affairs & Static GK</option>';
         }
     }
     
@@ -666,7 +674,12 @@
         const pool = questionBank[subject][selectedSet];
         currentQuestions = shuffleArray(pool).slice(0, 20);
         
-        document.getElementById('display-subject').innerText = "Subject: " + (subject === 'computer' ? "Computer Knowledge" : "General Intelligence");
+        let subjectText = "";
+        if (subject === 'computer') subjectText = "Computer Knowledge";
+        else if (subject === 'reasoning') subjectText = "General Intelligence & Reasoning";
+        else if (subject === 'gk') subjectText = "General Knowledge";
+
+        document.getElementById('display-subject').innerText = "Subject: " + subjectText;
         
         statuses = new Array(20).fill(0);
         statuses[0] = 1;
