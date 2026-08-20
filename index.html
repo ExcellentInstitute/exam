@@ -124,6 +124,40 @@
         .btn-resume:hover { background-color: #f0f0f0; }
 
         /* ==================================================
+           NEW: CUSTOM BEAUTIFUL MODAL SYSTEM
+           ================================================== */
+        .custom-modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: rgba(0, 0, 0, 0.6); z-index: 100000; 
+            justify-content: center; align-items: center; backdrop-filter: blur(3px);
+        }
+        .custom-modal {
+            background: white; width: 90%; max-width: 400px; border-radius: 12px;
+            padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center;
+            animation: modalFadeIn 0.3s ease-out; box-sizing: border-box;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .custom-modal-icon { font-size: 45px; margin-bottom: 10px; display: block; }
+        .custom-modal-title { margin: 0 0 10px 0; color: #333; font-size: 22px; font-weight: bold;}
+        .custom-modal-message { margin: 0 0 25px 0; color: #555; font-size: 16px; line-height: 1.5; white-space: pre-wrap; }
+        .custom-modal-actions { display: flex; justify-content: center; gap: 15px; }
+        .custom-btn {
+            padding: 12px 25px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold;
+            cursor: pointer; transition: 0.2s; flex: 1;
+        }
+        .custom-btn-confirm { background-color: #2c6eb5; color: white; }
+        .custom-btn-confirm:hover { background-color: #1e4d82; }
+        .custom-btn-cancel { background-color: #e0e0e0; color: #333; }
+        .custom-btn-cancel:hover { background-color: #ccc; }
+        
+        .modal-warning .custom-modal-icon { color: #f39c12; }
+        .modal-error .custom-modal-icon { color: #d32f2f; }
+        .modal-info .custom-modal-icon { color: #2c6eb5; }
+
+        /* ==================================================
            MOBILE & RESPONSIVE DESIGN TWEAKS
            ================================================== */
         @media screen and (max-width: 800px) {
@@ -175,6 +209,19 @@
         <p>You have exited Full-Screen mode. Leaving full-screen or switching tabs is strictly prohibited during an active examination.</p>
         <p><strong>ANTI-CHEAT PENALTY:</strong> When you resume, your current questions will be deleted, your answers will be wiped, and a new set of questions will be loaded. Your timer will <strong>NOT</strong> be reset.</p>
         <button class="btn-resume" onclick="resumeExam()">Accept Penalty & Resume Exam</button>
+    </div>
+
+    <!-- NEW: HTML Structure for Custom Dialogs -->
+    <div id="custom-modal-overlay" class="custom-modal-overlay">
+        <div id="custom-modal" class="custom-modal">
+            <div id="custom-modal-icon" class="custom-modal-icon"></div>
+            <h2 id="custom-modal-title" class="custom-modal-title">Alert</h2>
+            <p id="custom-message" class="custom-modal-message"></p>
+            <div class="custom-modal-actions">
+                <button id="custom-btn-cancel" class="custom-btn custom-btn-cancel" style="display: none;">Cancel</button>
+                <button id="custom-btn-confirm" class="custom-btn custom-btn-confirm">OK</button>
+            </div>
+        </div>
     </div>
 
     <div class="header">
@@ -368,6 +415,55 @@
     let examActive = false;
     let cachedDatabase = null;
 
+    // --- NEW: CUSTOM MODAL SYSTEM ---
+    function showCustomModal({ title, message, type, isConfirm, onConfirm, onCancel }) {
+        const overlay = document.getElementById('custom-modal-overlay');
+        const modal = document.getElementById('custom-modal');
+        const titleEl = document.getElementById('custom-modal-title');
+        const msgEl = document.getElementById('custom-message');
+        const iconEl = document.getElementById('custom-modal-icon');
+        const btnConfirm = document.getElementById('custom-btn-confirm');
+        const btnCancel = document.getElementById('custom-btn-cancel');
+
+        titleEl.innerText = title || 'Alert';
+        msgEl.innerText = message;
+
+        modal.className = 'custom-modal'; // reset classes
+        if (type === 'warning') {
+            modal.classList.add('modal-warning');
+            iconEl.innerHTML = '⚠️';
+        } else if (type === 'error') {
+            modal.classList.add('modal-error');
+            iconEl.innerHTML = '🛑';
+        } else {
+            modal.classList.add('modal-info');
+            iconEl.innerHTML = 'ℹ️';
+        }
+
+        if (isConfirm) {
+            btnCancel.style.display = 'block';
+            btnConfirm.innerText = 'Confirm';
+            if(type === 'warning' || type === 'error') btnConfirm.style.backgroundColor = '#d32f2f'; // Destructive action
+            else btnConfirm.style.backgroundColor = '#2c6eb5';
+        } else {
+            btnCancel.style.display = 'none';
+            btnConfirm.innerText = 'OK';
+            btnConfirm.style.backgroundColor = '#2c6eb5';
+        }
+
+        overlay.style.display = 'flex';
+
+        btnConfirm.onclick = () => {
+            overlay.style.display = 'none';
+            if (onConfirm) onConfirm();
+        };
+
+        btnCancel.onclick = () => {
+            overlay.style.display = 'none';
+            if (onCancel) onCancel();
+        };
+    }
+
     // --- DROPDOWNS ---
     function updateSetDropdown() {
         const subject = document.getElementById('exam-subject').value;
@@ -485,7 +581,10 @@
     // --- VERIFICATION LOGIC ---
     async function verifyStudent() {
         const nameInput = document.getElementById('student-name').value.trim();
-        if (nameInput === "") { alert("Please enter Candidate Name."); return; }
+        if (nameInput === "") { 
+            showCustomModal({title: "Missing Information", message: "Please enter Candidate Name.", type: "warning"});
+            return; 
+        }
         
         const btn = document.getElementById('btn-verify-start');
         btn.innerText = "Checking Database...";
@@ -670,8 +769,12 @@
     document.addEventListener("visibilitychange", () => {
         if (document.hidden && examActive && isTimed) {
             warningCount++;
-            alert("WARNING: You navigated away from the exam window! This action is strictly prohibited. (Warning " + warningCount + ")\n\nANTI-CHEAT PENALTY: Your questions have been changed and previous answers wiped!");
-            penalizeAndReroll();
+            showCustomModal({
+                title: "ANTI-CHEAT WARNING",
+                message: "WARNING: You navigated away from the exam window! This action is strictly prohibited. (Warning " + warningCount + ")\n\nANTI-CHEAT PENALTY: Your questions have been changed and previous answers wiped!",
+                type: "error",
+                onConfirm: () => { penalizeAndReroll(); }
+            });
         }
     });
 
@@ -701,7 +804,11 @@
 
     function generateExamData() {
         if (typeof questionBank === 'undefined') {
-            alert("ERROR: The question library failed to load. Please ensure 'question_library.js' is saved in the same folder.");
+            showCustomModal({
+                title: "System Error", 
+                message: "The question library failed to load. Please ensure 'question_library.js' is saved in the same folder.", 
+                type: "error"
+            });
             return;
         }
 
@@ -834,7 +941,7 @@
             userAnswers[currentIndex] = ans;
             statuses[currentIndex] = 4; 
         } else {
-            alert("You must select an answer to Save & Mark for Review.");
+            showCustomModal({title: "No Selection", message: "You must select an answer to Save & Mark for Review.", type: "info"});
             return;
         }
         moveToNext();
@@ -902,17 +1009,27 @@
             
             if (timeRemaining <= 0) {
                 clearInterval(timerInterval);
-                alert("Time is up! Auto-submitting exam.");
-                processSubmission();
+                showCustomModal({
+                    title: "Time's Up!", 
+                    message: "Time is up! Auto-submitting exam.", 
+                    type: "warning", 
+                    onConfirm: () => { processSubmission(); }
+                });
             }
         }, 1000);
     }
 
     function submitExam() {
-        if(confirm("Are you sure you want to submit the final exam? You will not be able to return.")) {
-            if(isTimed) clearInterval(timerInterval);
-            processSubmission();
-        }
+        showCustomModal({
+            title: "Submit Final Exam?",
+            message: "Are you sure you want to submit the final exam? You will not be able to return.",
+            type: "warning",
+            isConfirm: true,
+            onConfirm: () => {
+                if(isTimed) clearInterval(timerInterval);
+                processSubmission();
+            }
+        });
     }
 
     function processSubmission() {
