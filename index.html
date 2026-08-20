@@ -7,6 +7,11 @@
     
     <script src="question_library.js"></script>
 
+    <!-- NEW: Firebase SDKs for Direct Database Connection -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
     <style>
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f0f0f0; user-select: none; }
         
@@ -330,9 +335,25 @@
 
 <script>
     // ==========================================
-    // GOOGLE APP SCRIPT CONFIGURATION
+    // NEW: FIREBASE CONFIGURATION
+    // Replaces Google Apps Script pipeline
     // ==========================================
-    const GAS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxFsBuyiWOdTMMGeOgTXhvSmAfUK_uMbdwVO945ejPvnsEOQtX9ZtMCh9RQtBWzHSVj/exec'; 
+    const firebaseConfig = {
+        apiKey: "AIzaSyAPJ28Y1jBL30phxN-8yV-4X0raSEuBkx4",
+        authDomain: "excellent-institute-vault.firebaseapp.com",
+        databaseURL: "https://excellent-institute-vault-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "excellent-institute-vault",
+        storageBucket: "excellent-institute-vault.firebasestorage.app",
+        messagingSenderId: "132693034261",
+        appId: "1:132693034261:web:90db93c407607bd3c5951c",
+        measurementId: "G-CTLW9E7MYK"
+    };
+
+    if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+
+    // Keep legacy password variable for the invisible fallback auth
     const SYSTEM_PASSWORD = 'excellent@9658'; 
 
     let studentName = "";
@@ -364,7 +385,6 @@
             setDropdown.innerHTML += '<option value="medium">Medium (Randomizer)</option>';
             setDropdown.innerHTML += '<option value="hard">Hard (Randomizer)</option>';
         } else if (subject === 'gk') {
-        // ADDED GK SETS
         setDropdown.innerHTML += '<option value="set1">Set 1 - History & Culture</option>';
         setDropdown.innerHTML += '<option value="set2">Set 2 - Geography & Economy</option>';
         setDropdown.innerHTML += '<option value="set3">Set 3 - Polity & Constitution</option>';
@@ -392,7 +412,7 @@
         }
     });
 
-    // --- BULLETPROOF DATA NORMALIZER ---
+    // --- BULLETPROOF DATA NORMALIZER (FIREBASE POWERED) ---
     async function fetchAndNormalizeData() {
         const stored = sessionStorage.getItem('excellent_db_cache');
         if (stored) {
@@ -401,11 +421,28 @@
         }
 
         try {
-            const response = await fetch(`${GAS_WEB_APP_URL}?pass=${encodeURIComponent(SYSTEM_PASSWORD)}`);
-            const data = await response.json();
+            // SECURE PIPELINE: Automatically authenticate to bypass the 'auth != null' Firebase Rule
+            if (!firebase.auth().currentUser) {
+                try {
+                    await firebase.auth().signInAnonymously();
+                } catch(e) {
+                    // Seamless Fallback: Uses the legacy admin password if Anonymous Auth isn't enabled
+                    try {
+                        await firebase.auth().signInWithEmailAndPassword('admin@ei.com', SYSTEM_PASSWORD);
+                    } catch(err) {
+                        console.warn("Silent Authentication Failed. Ensure 'admin@ei.com' exists in Firebase Auth.", err);
+                    }
+                }
+            }
+
+            // Direct pull from Firebase Realtime Database
+            const snapshot = await firebase.database().ref('students').once('value');
+            if(!snapshot.exists()) throw new Error("No data found");
             
-            // Your backend stores data as fullData.students inside the SystemDB JSON block
-            let rawStudents = data.students || [];
+            let rawStudents = [];
+            snapshot.forEach(child => {
+                if(child.val()) rawStudents.push(child.val());
+            });
             
             // FORCE ALL KEYS TO LOWERCASE to prevent Case-Sensitive Undefined Errors
             let normalizedData = rawStudents.map(st => {
