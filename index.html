@@ -7,7 +7,7 @@
     
     <script src="question_library.js"></script>
 
-    <!-- NEW: Firebase SDKs for Direct Database Connection -->
+    <!-- Firebase SDKs for Direct Database Connection -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
@@ -123,9 +123,7 @@
         .btn-resume { background-color: white; color: #d32f2f; padding: 15px 40px; font-size: 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.3);}
         .btn-resume:hover { background-color: #f0f0f0; }
 
-        /* ==================================================
-           NEW: CUSTOM BEAUTIFUL MODAL SYSTEM
-           ================================================== */
+        /* CUSTOM MODAL SYSTEM */
         .custom-modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background-color: rgba(0, 0, 0, 0.6); z-index: 100000; 
@@ -157,9 +155,6 @@
         .modal-error .custom-modal-icon { color: #d32f2f; }
         .modal-info .custom-modal-icon { color: #2c6eb5; }
 
-        /* ==================================================
-           MOBILE & RESPONSIVE DESIGN TWEAKS
-           ================================================== */
         @media screen and (max-width: 800px) {
             body { font-size: 14px; }
             .header h1 { font-size: 18px; text-align: center; width: 100%; }
@@ -211,7 +206,6 @@
         <button class="btn-resume" onclick="resumeExam()">Accept Penalty & Resume Exam</button>
     </div>
 
-    <!-- NEW: HTML Structure for Custom Dialogs -->
     <div id="custom-modal-overlay" class="custom-modal-overlay">
         <div id="custom-modal" class="custom-modal">
             <div id="custom-modal-icon" class="custom-modal-icon"></div>
@@ -382,8 +376,7 @@
 
 <script>
     // ==========================================
-    // NEW: FIREBASE CONFIGURATION
-    // Replaces Google Apps Script pipeline
+    // FIREBASE CONFIGURATION (SECURE ANONYMOUS AUTH)
     // ==========================================
     const firebaseConfig = {
         apiKey: "AIzaSyAPJ28Y1jBL30phxN-8yV-4X0raSEuBkx4",
@@ -400,9 +393,6 @@
         firebase.initializeApp(firebaseConfig);
     }
 
-    // Keep legacy password variable for the invisible fallback auth
-    const SYSTEM_PASSWORD = 'excellent@9658'; 
-
     let studentName = "";
     let studentPhotoUrl = null;
     let currentQuestions = [];
@@ -415,7 +405,7 @@
     let examActive = false;
     let cachedDatabase = null;
 
-    // --- NEW: CUSTOM MODAL SYSTEM ---
+    // --- CUSTOM MODAL SYSTEM ---
     function showCustomModal({ title, message, type, isConfirm, onConfirm, onCancel }) {
         const overlay = document.getElementById('custom-modal-overlay');
         const modal = document.getElementById('custom-modal');
@@ -517,17 +507,12 @@
         }
 
         try {
-            // SECURE PIPELINE: Automatically authenticate to bypass the 'auth != null' Firebase Rule
+            // SECURE PIPELINE: Uses Anonymous Auth instead of exposing your Admin Password
             if (!firebase.auth().currentUser) {
                 try {
                     await firebase.auth().signInAnonymously();
                 } catch(e) {
-                    // Seamless Fallback: Uses the legacy admin password if Anonymous Auth isn't enabled
-                    try {
-                        await firebase.auth().signInWithEmailAndPassword('admin@ei.com', SYSTEM_PASSWORD);
-                    } catch(err) {
-                        console.warn("Silent Authentication Failed. Ensure 'admin@ei.com' exists in Firebase Auth.", err);
-                    }
+                    console.warn("Silent Authentication Failed. Ensure Anonymous Sign-in is enabled in Firebase Auth.", e);
                 }
             }
 
